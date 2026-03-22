@@ -156,6 +156,18 @@ require_once get_template_directory() . '/inc/destinations-cpt.php';
 require_once get_template_directory() . '/inc/cms-page-meta.php';
 require_once get_template_directory() . '/inc/contact-page-meta.php';
 
+require_once get_template_directory() . '/inc/about_section_customizer.php';
+
+require_once get_template_directory() . '/inc/vy_latestnews_customizer.php';
+
+require_once get_template_directory() . '/inc/archive-customizer.php';
+
+require_once get_template_directory() . '/inc/single-banner-meta.php';
+
+
+
+
+
 
 // ═══════════════════════════════════════════════════════════════
 // 5. CUSTOMIZER SETTINGS

@@ -1,110 +1,146 @@
 /* ============================================================
-   VOYA — header.css
-   Clean, Minimal Single-Bar Header
+   VOYA — header.css  (v2.1)
    Sections:
-   1. Base Header & Layout
-   2. Logo
-   3. Primary Navigation (Desktop)
-   4. Dropdown Menu
-   5. Header Actions (Social, Search, CTA, Hamburger)
-   6. Search Bar (expand)
-   7. Mobile Menu Overlay (slide-in panel)
-   8. Body Offset & Misc
-   9. Responsive Breakpoints
+   1.  CSS Tokens
+   2.  Top Bar (email + phone, centered)
+   3.  Base Header & Layout
+   4.  Logo
+   5.  Primary Navigation — Logo LEFT · Nav+Actions RIGHT
+   6.  Nav Brush-stroke hover (SVG clip-path, restored)
+   7.  Nav Dropdown
+   8.  Header Actions
+   9.  Search Modal (vertically + horizontally centered)
+   10. Mobile Menu
+   11. Responsive Breakpoints
    ============================================================ */
 
 /* ============================================================
-   1. BASE HEADER & LAYOUT
+   1. CSS TOKENS
    ============================================================ */
-
-/* Local tokens */
 :root {
-  --vy-header-h: var(--header-height-desktop, 80px);
-  --vy-header-h-mob: var(--header-height-mobile, 64px);
-  --vy-header-glass: rgba(255, 255, 255, 0.94);
-  --vy-header-blur: blur(14px);
+  --vy-topbar-h: 40px;
+  --vy-topbar-bg: var(--color-dark, #0a1e28);
+  --vy-topbar-text: rgba(255, 255, 255, 0.8);
+  --vy-topbar-text-h: var(--color-accent, #7aabbf);
+
+  --vy-header-h: 80px;
+  --vy-header-h-mob: 64px;
+  --vy-header-bg: var(--color-white, #fff);
+  --vy-header-border: var(--color-border, #d0dfe8);
+  --vy-header-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
 }
 
-.vy-header {
-  position: fixed;
-  top: 0;
-  left: 0;
+/* ============================================================
+   2. TOP BAR — dark strip, email + phone centered
+   position: relative → in-flow, scrolls away naturally.
+   ============================================================ */
+.vy-topbar {
+  position: relative;
   width: 100%;
-  z-index: var(--z-header, 900);
-  overflow: visible; /* đảm bảo .vy-search-bar absolute không bị clip */
-  background-color: var(--color-white);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.07);
-  transition:
-    background-color var(--transition-base, 0.26s ease),
-    box-shadow var(--transition-base, 0.26s ease);
+  height: var(--vy-topbar-h);
+  background-color: var(--vy-topbar-bg);
+  z-index: 901;
 }
 
-/* Inner wrapper: flex row với max-width */
+.vy-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  max-width: var(--container-wide, 1440px);
+  margin: 0 auto;
+  padding: 0 var(--gutter, 40px);
+}
+
+.vy-topbar__contacts {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.vy-topbar__tagline {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--vy-topbar-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-right: 4px;
+}
+
+.vy-topbar__contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--vy-topbar-text);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--transition-fast, 0.15s);
+}
+
+/* Hover: tăng specificity bằng .vy-topbar để override global a:hover */
+.vy-topbar .vy-topbar__contact:hover {
+  color: var(--color-white, #fff) !important;
+}
+
+.vy-topbar__contact i {
+  font-size: 11px;
+  color: var(--color-accent, #7aabbf);
+  flex-shrink: 0;
+  transition: color var(--transition-fast, 0.15s);
+}
+
+/* Icon hover: sáng lên nhẹ, phân biệt với text trắng */
+.vy-topbar .vy-topbar__contact:hover i {
+  color: #cce8f4;
+}
+
+/* ============================================================
+   3. BASE HEADER & LAYOUT
+   position: sticky → snaps to top:0 once topbar scrolls away.
+   ============================================================ */
+.vy-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 900;
+  background-color: var(--vy-header-bg);
+  border-bottom: 1px solid var(--vy-header-border);
+  transition:
+    box-shadow var(--transition-base, 0.26s ease),
+    border-color var(--transition-base, 0.26s ease);
+}
+
+.vy-header.is-sticky {
+  box-shadow: var(--vy-header-shadow);
+  border-bottom-color: transparent;
+}
+
+.vy-header-no-transition,
+.vy-header-no-transition * {
+  transition: none !important;
+}
+
+/* Inner: [Logo]────────[Nav items · Search · CTA · Hamburger] */
 .vy-header__inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
   height: var(--vy-header-h);
   max-width: var(--container-wide, 1440px);
   margin: 0 auto;
   padding: 0 var(--gutter, 40px);
 }
 
-/* ── Sticky state ── */
-.vy-header.is-sticky {
-  background-color: var(--vy-header-glass);
-  backdrop-filter: var(--vy-header-blur);
-  -webkit-backdrop-filter: var(--vy-header-blur);
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.06),
-    var(--shadow-sm);
-}
-
-/* ── Transparent state — PHP adds on hero pages, JS maintains on scroll ── */
-.vy-header.is-transparent {
-  background-color: transparent;
-  box-shadow: none;
-}
-
-/* ── Top scrim — gradient tối phía sau header khi float trên hero ──
-   Tạo visual anchor, giúp logo/nav luôn đọc được trên mọi ảnh sáng/tối
-   Scrim nằm ngay dưới header bằng ::before pseudo, không ảnh hưởng layout
-   ─────────────────────────────────────────────────────────────────────── */
-.vy-header.is-transparent::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 160px;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.48) 0%,
-    rgba(0, 0, 0, 0.18) 55%,
-    transparent 100%
-  );
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* ── No-transition on initial paint ──────────────────────────────
-   Khi page load, class is-transparent đã có sẵn từ PHP server-side.
-   Nếu để transition, browser sẽ animate từ white → transparent ngay
-   lúc đầu dù không có thay đổi nào.
-   .vy-header-no-transition được JS remove sau 1 frame.
-   ─────────────────────────────────────────────────────────────── */
-.vy-header-no-transition,
-.vy-header-no-transition * {
-  transition: none !important;
+/* Both topbar + header are in-flow — no padding-top on body */
+body {
+  padding-top: 0 !important;
 }
 
 /* ============================================================
-   2. LOGO
+   4. LOGO — stays LEFT, flex-shrink:0
    ============================================================ */
 .vy-header__logo {
   flex-shrink: 0;
-  /* Logo không co dãn */
 }
 
 .vy-header__logo a {
@@ -116,59 +152,29 @@
   height: 44px;
   width: auto;
   max-width: 180px;
-  transition: opacity var(--transition-fast, 0.15s ease);
-}
-
-/* Default: show dark logo (header trắng) */
-.vy-logo--dark {
-  display: block;
-}
-.vy-logo--light {
-  display: none;
-}
-
-/* Transparent header → show light logo */
-.vy-header.is-transparent .vy-logo--dark {
-  display: none;
-}
-.vy-header.is-transparent .vy-logo--light {
   display: block;
 }
 
-/* Sticky → dark logo */
-.vy-header.is-sticky .vy-logo--dark {
-  display: block;
-}
-.vy-header.is-sticky .vy-logo--light {
-  display: none;
-}
-
-/* Text fallback logo */
 .vy-logo-text {
   font-family: var(--font-heading);
   font-size: var(--fs-xl, 24px);
   font-weight: var(--fw-light, 300);
   letter-spacing: var(--ls-wide, 0.06em);
-  /* Default: dark */
   color: var(--color-primary);
-  transition: color var(--transition-fast);
-}
-
-.vy-header.is-transparent .vy-logo-text {
-  color: var(--color-white);
 }
 
 /* ============================================================
-   3. PRIMARY NAVIGATION (Desktop)
+   5. PRIMARY NAVIGATION — pushed to RIGHT via margin-left:auto
+   Result: Logo on far left · Nav+Actions on far right
    ============================================================ */
 .vy-header__nav {
-  flex: 1; /* chiếm khoảng trống giữa logo và actions */
+  margin-left: auto; /* KEY: pushes nav+actions to right */
   display: flex;
-  justify-content: center;
+  align-items: center;
   height: 100%;
+  flex-shrink: 0;
 }
 
-/* ul.vy-nav */
 .vy-nav {
   display: flex;
   align-items: center;
@@ -179,7 +185,6 @@
   gap: 0;
 }
 
-/* li */
 .vy-nav > li {
   position: relative;
   height: 100%;
@@ -187,26 +192,24 @@
   align-items: center;
 }
 
-/* Top-level link */
 .vy-nav__link {
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 0 18px;
+  padding: 0 16px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 15px;
   font-weight: var(--fw-medium, 500);
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
+  letter-spacing: 0.03em;
   text-decoration: none;
   white-space: nowrap;
   color: var(--color-primary);
   position: relative;
-  gap: 0; /* brush + inner manage spacing internally */
-  transition: color var(--transition-fast, 0.15s ease);
+  gap: 0;
+  transition: color var(--transition-fast, 0.15s);
 }
 
-/* ── .vy-nav__inner: text + arrow wrapper — nằm trên brush ── */
+/* Text + arrow sits above the brush SVG */
 .vy-nav__inner {
   position: relative;
   z-index: 1;
@@ -215,7 +218,27 @@
   gap: 5px;
 }
 
-/* ── Brush stroke: clip-path reveal left → right ── */
+.vy-nav > li:hover .vy-nav__link,
+.vy-nav__link.is-active {
+  color: var(white);
+}
+
+.vy-nav__arrow {
+  font-size: 9px;
+  transition: transform var(--transition-fast, 0.15s);
+  flex-shrink: 0;
+}
+
+.vy-nav > li:hover .vy-nav__arrow {
+  transform: rotate(180deg);
+}
+
+/* ============================================================
+   6. NAV BRUSH-STROKE HOVER
+   Three-part pill: [left-cap SVG][mid fill][right-cap SVG]
+   Reveal left→right via clip-path on hover / .is-active.
+   (Walker still outputs the HTML — we just enable it here)
+   ============================================================ */
 .vy-nav__brush {
   position: absolute;
   top: 50%;
@@ -228,32 +251,24 @@
   pointer-events: none;
   z-index: 0;
   color: var(--color-accent);
-  /* Hidden: clipped từ bên phải */
+  /* Start hidden (clipped from right) */
   clip-path: inset(0 100% 0 0);
   transition: clip-path 0.36s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Transparent header: brush màu trắng nhạt */
-.vy-header.is-transparent .vy-nav__brush {
-  color: rgba(255, 255, 255, 0.22);
-}
-
-/* Reveal khi hover hoặc active */
+/* Reveal on hover or active */
 .vy-nav > li:hover .vy-nav__brush,
-.vy-nav > li .vy-nav__link.is-active .vy-nav__brush {
+.vy-nav__link.is-active .vy-nav__brush {
   clip-path: inset(0 0% 0 0);
 }
 
-/* Left SVG cap */
 .vy-brush__left {
   flex-shrink: 0;
   width: 16px;
   height: 30px;
   display: block;
-  margin-right: -0px;
 }
 
-/* Middle fill */
 .vy-brush__mid {
   flex: 1;
   min-width: 2px;
@@ -262,52 +277,15 @@
   display: block;
 }
 
-/* Right SVG cap */
 .vy-brush__right {
   flex-shrink: 0;
   width: 16px;
   height: 30px;
   display: block;
-  margin-left: -0px;
-}
-
-/* Nav link color states */
-.vy-nav > li:hover .vy-nav__link {
-  color: var(--color-accent);
-}
-
-/* Transparent header (hero): chữ trắng */
-.vy-header.is-transparent .vy-nav__link {
-  color: var(--color-white);
-}
-
-.vy-header.is-transparent .vy-nav > li:hover .vy-nav__link {
-  color: var(--color-white);
-}
-
-/* Arrow */
-.vy-nav__arrow {
-  font-size: 9px;
-  transition: transform var(--transition-fast);
-  flex-shrink: 0;
-}
-
-.vy-nav > li:hover .vy-nav__arrow {
-  transform: rotate(180deg);
-}
-
-/* ── Color states ── */
-
-/* Sticky → dark (same as default, just override accent) */
-.vy-header.is-sticky .vy-nav__link {
-  color: var(--color-primary);
-}
-.vy-header.is-sticky .vy-nav > li:hover .vy-nav__link {
-  color: var(--color-accent);
 }
 
 /* ============================================================
-   4. DROPDOWN MENU
+   7. NAV DROPDOWN
    ============================================================ */
 .vy-dropdown {
   position: absolute;
@@ -317,16 +295,14 @@
   min-width: 200px;
   background: var(--color-white);
   border-top: 2px solid var(--color-accent);
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity var(--transition-base),
-    transform var(--transition-base),
-    visibility var(--transition-base);
+    opacity var(--transition-base, 0.26s),
+    transform var(--transition-base, 0.26s),
+    visibility var(--transition-base, 0.26s);
   z-index: var(--z-dropdown, 100);
-  /* Prevent dropdown from going outside viewport on edge items */
-  max-width: 260px;
 }
 
 .vy-nav > li:hover .vy-dropdown,
@@ -336,54 +312,51 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* Căn phải cho item cuối cùng */
 .vy-nav > li:last-child .vy-dropdown,
 .vy-nav > li:nth-last-child(2) .vy-dropdown {
   left: auto;
   right: 0;
   transform: translateY(-6px);
 }
+
 .vy-nav > li:last-child:hover .vy-dropdown,
 .vy-nav > li:nth-last-child(2):hover .vy-dropdown {
   transform: translateY(0);
 }
 
-/* List */
 .vy-dropdown__list {
-  padding: 12px 0;
+  padding: 10px 0;
   list-style: none;
   margin: 0;
 }
 
-/* Dropdown link */
 .vy-dropdown__link {
   display: block;
-  padding: 10px 24px;
-  font-size: 11px;
+  padding: 10px 22px;
+  font-size: 12px;
   font-weight: var(--fw-medium, 500);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-primary);
   text-decoration: none;
   white-space: nowrap;
   transition:
-    color var(--transition-fast),
-    padding-left var(--transition-fast);
+    color var(--transition-fast, 0.15s),
+    padding-left var(--transition-fast, 0.15s);
 }
 
 .vy-dropdown__link:hover,
 .vy-dropdown__link.is-active {
   color: var(--color-accent);
-  padding-left: 30px;
+  padding-left: 28px;
 }
 
-/* 3rd level */
 .vy-dropdown__list li.has-dropdown {
   position: relative;
 }
 
 .vy-dropdown__list li.has-dropdown > .vy-dropdown {
-  top: -12px;
+  top: -10px;
   left: 100%;
   right: auto;
   transform: translateX(-6px) translateY(0);
@@ -394,112 +367,46 @@
 }
 
 /* ============================================================
-   5. HEADER ACTIONS
+   8. HEADER ACTIONS (search, CTA, hamburger)
+   Lives immediately after .vy-header__nav in the flex row.
    ============================================================ */
 .vy-header__actions {
   display: flex;
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
+  padding-left: 8px;
 }
 
-/* ── Social Icons ── */
-.vy-header__social {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin-right: 4px;
-}
-
-.vy-header__social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  font-size: 13px;
-  /* Default: dark */
-  color: var(--color-secondary);
-  text-decoration: none;
-  border-radius: var(--radius-sm);
-  transition:
-    color var(--transition-fast),
-    transform var(--transition-fast);
-}
-
-.vy-header__social-link:hover {
-  color: var(--color-accent);
-  transform: translateY(-2px);
-}
-
-/* Transparent header → white icons */
-.vy-header.is-transparent .vy-header__social-link {
-  color: rgba(255, 255, 255, 0.85);
-}
-.vy-header.is-transparent .vy-header__social-link:hover {
-  color: var(--color-white);
-  transform: translateY(-2px);
-}
-
-/* ── Divider ── */
-.vy-header__divider {
-  display: block;
-  width: 1px;
-  height: 18px;
-  background-color: var(--color-border);
-  margin: 0 8px;
-  flex-shrink: 0;
-}
-
-.vy-header.is-transparent .vy-header__divider {
-  background-color: rgba(255, 255, 255, 0.25);
-}
-
-/* ── Search Button ── */
 .vy-search-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  font-size: 15px;
-  /* Default: dark */
-  color: var(--color-primary);
+  width: 38px;
+  height: 38px;
+  font-size: 16px;
+  color: var(--color-secondary);
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
-  border-radius: var(--radius-sm);
-  transition: color var(--transition-fast);
+  border-radius: var(--radius-sm, 4px);
+  transition: color var(--transition-fast, 0.15s);
 }
 
 .vy-search-btn:hover {
   color: var(--color-accent);
 }
 
-/* Transparent header → white */
-.vy-header.is-transparent .vy-search-btn {
-  color: var(--color-white);
-}
-.vy-header.is-transparent .vy-search-btn:hover {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-/* When search bar is open */
-.vy-header.search-is-open .vy-search-btn {
-  color: var(--color-accent);
-}
-
-/* ── CTA Button ── */
 .vy-header__cta {
   margin-left: 8px;
-  padding: 10px 22px;
+  padding: 9px 20px;
   font-size: 10px;
 }
 
-/* ── Hamburger (mobile only, hidden on desktop) ── */
+/* Hamburger — hidden on desktop */
 .vy-hamburger {
-  display: none; /* shown via media query */
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
@@ -517,23 +424,18 @@
   display: block;
   width: 22px;
   height: 1.5px;
-  background-color: var(
-    --color-primary
-  ); /* luôn dark — hamburger chỉ hiện trên mobile (header trắng) */
+  background-color: var(--color-primary);
   transition:
-    transform var(--transition-base),
-    opacity var(--transition-base),
-    width var(--transition-base),
-    background-color var(--transition-base);
+    transform var(--transition-base, 0.26s),
+    opacity var(--transition-base, 0.26s),
+    width var(--transition-base, 0.26s);
   transform-origin: center;
 }
 
-/* 3rd line shorter → visual cue */
 .vy-hamburger__line--3 {
   width: 14px;
 }
 
-/* Active / open state */
 .vy-hamburger.is-active .vy-hamburger__line--1 {
   transform: translateY(6.5px) rotate(45deg);
   width: 22px;
@@ -548,162 +450,130 @@
 }
 
 /* ============================================================
-   6. SEARCH BAR (expand below header)
+   9. SEARCH MODAL — TRUE CENTER of viewport
+   align-items:center + justify-content:center = dead center ✓
    ============================================================ */
-.vy-search-bar {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background: var(--color-white);
-  border-top: 2px solid var(--color-accent);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  z-index: var(--z-dropdown, 100);
+.vy-search-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal, 1000);
+  display: flex;
+  align-items: center; /* vertical center */
+  justify-content: center; /* horizontal center */
 
-  /* Khi ẩn */
-  display: block;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
   pointer-events: none;
-
   transition:
-    opacity 0.22s ease,
-    transform 0.22s ease,
-    background-color 0.22s ease,
-    border-color 0.22s ease,
-    box-shadow 0.22s ease,
-    visibility 0s linear 0.22s;
+    opacity 0.25s ease,
+    visibility 0s linear 0.25s;
 }
 
-.vy-search-bar.is-open {
+.vy-search-modal.is-open {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
   pointer-events: auto;
-
   transition:
-    opacity 0.22s ease,
-    transform 0.22s ease,
-    background-color 0.22s ease,
-    border-color 0.22s ease,
-    box-shadow 0.22s ease,
+    opacity 0.25s ease,
     visibility 0s linear 0s;
 }
 
-/* ── Transparent state: float trên hero, hoàn toàn trong suốt ── */
-.vy-header.is-transparent .vy-search-bar {
-  background: transparent;
-  border-top: none;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+.vy-search-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 30, 40, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
 }
 
-.vy-search-bar__inner {
-  max-width: var(--container-max, 1160px);
-  margin: 0 auto;
-  padding: 0 var(--gutter, 40px);
-  height: 72px;
-  display: flex;
-  align-items: center;
-}
-
-.vy-search-bar__inner form {
-  display: flex;
-  align-items: center;
+.vy-search-modal__wrap {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  gap: 8px;
-  border-bottom: 1px solid var(--color-border);
-  transition: border-color 0.22s ease;
+  max-width: 720px;
+  padding: 0 var(--gutter, 40px);
+  /* Entry animation: rise from below */
+  transform: translateY(20px);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Transparent: form border trắng nhạt */
-.vy-header.is-transparent .vy-search-bar__inner form {
-  border-bottom-color: rgba(255, 255, 255, 0.18);
+.vy-search-modal.is-open .vy-search-modal__wrap {
+  transform: translateY(0);
 }
 
-/* Large elegant input */
-.vy-search-bar__input {
+.vy-search-modal__box {
+  display: flex;
+  align-items: center;
+  background: var(--color-white);
+  border-radius: 60px;
+  padding: 0 10px 0 24px;
+  height: 62px;
+  gap: 12px;
+  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.3);
+}
+
+.vy-search-modal__icon {
+  font-size: 17px;
+  color: var(--color-secondary);
+  flex-shrink: 0;
+}
+
+.vy-search-modal__input {
   flex: 1;
   border: none;
   outline: none;
-  padding: 12px 0;
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: var(--fs-lg, 20px);
   font-weight: var(--fw-light, 300);
-  font-style: italic;
   color: var(--color-primary);
   background: transparent;
   min-width: 0;
-  transition: color 0.22s ease;
+  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-.vy-search-bar__input::placeholder {
+.vy-search-modal__input::placeholder {
   color: var(--color-mid-gray);
-  font-style: italic;
-  transition: color 0.22s ease;
 }
 
-/* Transparent: input text + placeholder trắng */
-.vy-header.is-transparent .vy-search-bar__input {
-  color: var(--color-white);
+.vy-search-modal__input::-webkit-search-cancel-button {
+  display: none;
 }
 
-.vy-header.is-transparent .vy-search-bar__input::placeholder {
-  color: rgba(255, 255, 255, 0.42);
-}
-
-.vy-search-bar__submit,
-.vy-search-bar__close {
+.vy-search-modal__close {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-off-white);
   border: none;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--color-secondary);
-  transition: color var(--transition-fast);
-  padding: 0;
+  transition:
+    background var(--transition-fast, 0.15s),
+    color var(--transition-fast, 0.15s);
 }
 
-.vy-search-bar__submit:hover {
-  color: var(--color-accent);
-}
-.vy-search-bar__close:hover {
-  color: var(--color-primary);
-}
-
-/* Transparent: buttons trắng */
-.vy-header.is-transparent .vy-search-bar__submit,
-.vy-header.is-transparent .vy-search-bar__close {
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.vy-header.is-transparent .vy-search-bar__submit:hover {
-  color: var(--color-accent);
-}
-
-.vy-header.is-transparent .vy-search-bar__close:hover {
+.vy-search-modal__close:hover {
+  background: var(--color-primary);
   color: var(--color-white);
 }
 
 /* ============================================================
-   7. MOBILE MENU OVERLAY
+   10. MOBILE MENU (slide-in panel from right)
    ============================================================ */
-
-/* Outer wrapper — covers full viewport */
 .vy-mobile-menu {
   position: fixed;
   inset: 0;
   z-index: var(--z-overlay, 950);
   pointer-events: none;
   visibility: hidden;
-  /* Transition on visibility (immediate close, delayed open) */
   transition: visibility 0s var(--transition-slow, 0.42s);
 }
 
@@ -713,7 +583,6 @@
   transition: visibility 0s 0s;
 }
 
-/* Backdrop */
 .vy-mobile-menu__backdrop {
   position: absolute;
   inset: 0;
@@ -727,7 +596,6 @@
   opacity: 1;
 }
 
-/* Slide-in Panel */
 .vy-mobile-menu__panel {
   position: absolute;
   top: 0;
@@ -742,19 +610,18 @@
     cubic-bezier(0.4, 0, 0.2, 1);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  box-shadow: -10px 0 60px rgba(0, 0, 0, 0.12);
+  box-shadow: -8px 0 48px rgba(0, 0, 0, 0.12);
 }
 
 .vy-mobile-menu.is-open .vy-mobile-menu__panel {
   transform: translateX(0);
 }
 
-/* ── Panel Head ── */
 .vy-mobile-menu__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 28px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;
   position: sticky;
@@ -791,7 +658,6 @@
   background: var(--color-light-gray);
 }
 
-/* ── Panel Nav ── */
 .vy-mobile-menu__nav {
   flex: 1;
   padding: 8px 0 16px;
@@ -804,7 +670,6 @@
   padding: 0;
 }
 
-/* Nav item row — flex để link + toggle button align */
 .vy-mobile-item {
   display: flex;
   flex-wrap: wrap;
@@ -817,15 +682,14 @@
   border-bottom: none;
 }
 
-/* Nav link */
 .vy-mobile-link {
   flex: 1;
   display: block;
-  padding: 16px 28px;
+  padding: 16px 24px;
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: var(--fw-medium, 500);
-  letter-spacing: 0.13em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-primary);
   text-decoration: none;
@@ -836,7 +700,6 @@
   color: var(--color-accent);
 }
 
-/* Sub-menu toggle (+/×) */
 .vy-mobile-toggle {
   width: 52px;
   height: 52px;
@@ -863,7 +726,6 @@
   color: var(--color-accent);
 }
 
-/* Sub-menu list (accordion) */
 .vy-mobile-sub {
   width: 100%;
   list-style: none;
@@ -882,17 +744,16 @@
 .vy-mobile-sub li {
   border-bottom: 1px solid var(--color-border);
 }
-
 .vy-mobile-sub li:last-child {
   border-bottom: none;
 }
 
 .vy-mobile-sub li a {
   display: block;
-  padding: 12px 28px 12px 44px;
+  padding: 12px 24px 12px 40px;
   font-size: 10px;
   font-weight: var(--fw-medium, 500);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-secondary);
   text-decoration: none;
@@ -903,15 +764,13 @@
   color: var(--color-accent);
 }
 
-/* ── Panel Foot ── */
 .vy-mobile-menu__foot {
-  padding: 24px 28px 36px;
+  padding: 24px 24px 36px;
   border-top: 1px solid var(--color-border);
   background: var(--color-off-white);
   flex-shrink: 0;
 }
 
-/* Contact items */
 .vy-mobile-menu__contact {
   margin-bottom: 20px;
   display: flex;
@@ -924,7 +783,6 @@
   align-items: center;
   gap: 10px;
   font-size: 12px;
-  font-weight: var(--fw-regular, 400);
   color: var(--color-secondary);
   text-decoration: none;
   transition: color var(--transition-fast);
@@ -934,7 +792,7 @@
   width: 18px;
   text-align: center;
   color: var(--color-accent);
-  font-size: 15px;
+  font-size: 14px;
   flex-shrink: 0;
 }
 
@@ -942,7 +800,6 @@
   color: var(--color-primary);
 }
 
-/* Social links */
 .vy-mobile-menu__social {
   display: flex;
   align-items: center;
@@ -957,7 +814,7 @@
   width: 38px;
   height: 38px;
   border: 1px solid var(--color-border);
-  font-size: 15px;
+  font-size: 14px;
   color: var(--color-secondary);
   text-decoration: none;
   transition:
@@ -970,103 +827,52 @@
   background: var(--color-accent);
   border-color: var(--color-accent);
   color: var(--color-white);
-  transform: none; /* no translate on mobile */
 }
 
 /* ============================================================
-   8. BODY OFFSET
+   11. RESPONSIVE BREAKPOINTS
    ============================================================ */
 
-/* Default: body has header height padding — header fixed */
-body {
-  padding-top: var(--vy-header-h);
-}
-
-/* Hero pages: header floats trên ảnh, không cần padding */
-body.home,
-body.single-post,
-body.page-template-page-cms,
-body.page-template-page-contact,
-body.error404 {
-  padding-top: 0;
-}
-
-/* ============================================================
-   9. RESPONSIVE BREAKPOINTS
-   ============================================================ */
-
-/* Tablet + Mobile: ≤ 1199px */
+/* Tablet + Mobile ≤ 1199px */
 @media (max-width: 1199px) {
-  /* Hide desktop nav & social */
   .vy-header__nav,
-  .vy-header__social,
-  .vy-header__divider,
   .vy-header__cta {
     display: none;
   }
 
-  /* Show hamburger */
   .vy-hamburger {
     display: flex;
   }
 
-  /* Header always white on mobile */
-  .vy-header {
-    background-color: var(--color-white) !important;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.07) !important;
-  }
-
-  /* Always dark logo on mobile */
-  .vy-logo--light {
-    display: none !important;
-  }
-  .vy-logo--dark {
-    display: block !important;
-  }
-
-  .vy-logo-text {
-    color: var(--color-primary) !important;
-  }
-
-  /* Inner height */
   .vy-header__inner {
-    height: var(--vy-header-h-mob);
-    padding: 0 var(--gutter, 40px);
-    gap: 12px;
-  }
-
-  /* Mobile body padding */
-  body {
-    padding-top: var(--vy-header-h-mob);
-  }
-  body.home,
-  body.single-post,
-  body.page-template-page-cms,
-  body.page-template-page-contact,
-  body.error404 {
-    padding-top: 0;
-  }
-
-  /* Search bar full-width */
-  .vy-search-bar__inner {
-    height: 64px;
+    height: var(--vy-header-h-mob, 64px);
     padding: 0 var(--gutter, 40px);
   }
 
-  .vy-search-bar__input {
-    font-size: var(--fs-md, 17px);
+  .vy-logo {
+    height: 36px;
+  }
+
+  .vy-header__actions {
+    padding-left: 0;
+    gap: 2px;
   }
 }
 
-/* Tablet landscape: 768–1199 */
+/* Tablet 768–1199 */
 @media (max-width: 1199px) and (min-width: 768px) {
-  .vy-header__inner {
+  .vy-header__inner,
+  .vy-topbar__inner {
     padding: 0 32px;
   }
 }
 
-/* Mobile: ≤ 767px */
+/* Mobile ≤ 767px */
 @media (max-width: 767px) {
+  .vy-topbar {
+    display: none;
+  }
+
   :root {
     --vy-header-h-mob: 58px;
   }
@@ -1075,27 +881,34 @@ body.error404 {
     padding: 0 20px;
   }
   .vy-logo {
-    height: 34px;
+    height: 32px;
   }
 
   .vy-mobile-menu__panel {
-    width: 100vw; /* Full screen on small mobile */
+    width: 100vw;
+  }
+
+  .vy-search-modal__wrap {
+    padding: 0 16px;
+  }
+  .vy-search-modal__box {
+    height: 54px;
+    padding: 0 8px 0 18px;
+  }
+  .vy-search-modal__input {
+    font-size: var(--fs-md, 17px);
   }
 }
 
-/* Small mobile: ≤ 480px */
+/* Small mobile ≤ 480px */
 @media (max-width: 480px) {
   :root {
     --vy-header-h-mob: 54px;
   }
-
   .vy-header__inner {
     padding: 0 16px;
   }
-  .vy-search-bar__inner {
-    padding: 0 16px;
-  }
   .vy-logo {
-    height: 30px;
+    height: 28px;
   }
 }

@@ -2,15 +2,6 @@
 /**
  * WANDERLAND — Home Sections Options Page
  * File: inc/home-options.php
- *
- * Trang admin để chọn bài viết cho từng section trên trang Home.
- * Không dùng ACF — thuần WordPress Options API.
- *
- * Options được lưu:
- *   wl_section_{section_key}  →  array of post IDs (theo thứ tự)
- *
- * Cách include vào functions.php:
- *   require_once get_template_directory() . '/inc/home-options.php';
  */
 
 if (!defined('ABSPATH'))
@@ -19,7 +10,6 @@ if (!defined('ABSPATH'))
 
 // ═══════════════════════════════════════════════════════════════
 //  1. DEFINE HOME SECTIONS
-//  Thêm section mới ở đây khi làm thêm phần home.
 // ═══════════════════════════════════════════════════════════════
 
 function wl_get_home_sections()
@@ -42,21 +32,38 @@ function wl_get_home_sections()
             'min_posts' => 4,
         ),
 
-        // ── Các section sẽ mở khoá sau ──────────────────────
         'featured_posts' => array(
             'label' => __('Featured Posts', 'wanderland'),
-            'description' => __('Bài nổi bật hiển thị trong slider 3 cột.', 'wanderland'),
+            'description' => __('Bài nổi bật hiển thị trong slider 3 cột (S4).', 'wanderland'),
             'icon' => 'dashicons-star-filled',
             'max_posts' => 12,
             'min_posts' => 3,
         ),
 
         'travel_essentials' => array(
-            'label' => __('Travel Essentials', 'wanderland'),
-            'description' => __('Bài tips & tricks hiển thị trong section "Travel Essentials".', 'wanderland'),
-            'icon' => 'dashicons-admin-post',
-            'max_posts' => 2,
-            'min_posts' => 1,
+            'label' => __('Featured Tours Slider', 'wanderland'),
+            'description' => __('Các bài viết hiển thị trong slider Tours nổi bật. Tối đa 12 bài.', 'wanderland'),
+            'icon' => 'dashicons-location-alt',
+            'max_posts' => 12,
+            'min_posts' => 4,
+        ),
+
+        /* ── S5: Destinations Portrait Slider ── */
+        'destination_slider' => array(
+            'label' => __('Destinations Slider (Home S5)', 'wanderland'),
+            'description' => __('Portrait slider điểm đến — chọn bài viết blog làm điểm đến. Desktop hiện 4 card, tablet 3, mobile 1. Ảnh đại diện nên có tỉ lệ đứng (portrait ~2:3).', 'wanderland'),
+            'icon' => 'dashicons-location-alt',
+            'max_posts' => 20,
+            'min_posts' => 4,
+        ),
+
+        /* ── S8: Top Popular Blogs ── */
+        'top_blogs' => array(
+            'label' => __('Top Popular Blogs (Home S8)', 'wanderland'),
+            'description' => __('6 bài viết phổ biến nhất — hiển thị dạng portrait grid 6 cột ở cuối trang home. Chọn bài theo thứ tự muốn hiển thị.', 'wanderland'),
+            'icon' => 'dashicons-book-alt',
+            'max_posts' => 12,
+            'min_posts' => 3,
         ),
 
     ));
@@ -72,11 +79,11 @@ add_action('admin_menu', 'wl_register_home_options_page');
 function wl_register_home_options_page()
 {
     add_theme_page(
-        __('Home Sections', 'wanderland'),   // Page title
-        __('Home Sections', 'wanderland'),   // Menu label
-        'edit_theme_options',                   // Capability
-        'wl-home-sections',                     // Menu slug
-        'wl_render_home_options_page'           // Callback
+        __('Home Sections', 'wanderland'),
+        __('Home Sections', 'wanderland'),
+        'edit_theme_options',
+        'wl-home-sections',
+        'wl_render_home_options_page'
     );
 }
 
@@ -89,7 +96,6 @@ add_action('admin_enqueue_scripts', 'wl_enqueue_home_options_assets');
 
 function wl_enqueue_home_options_assets($hook)
 {
-    // Chỉ load trên trang này
     if ($hook !== 'appearance_page_wl-home-sections')
         return;
 
@@ -111,7 +117,6 @@ function wl_enqueue_home_options_assets($hook)
         true
     );
 
-    // Pass dữ liệu sang JS
     wp_localize_script('wl-home-options', 'WL_HOME_OPTIONS', array(
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'restUrl' => rest_url('wp/v2/posts'),
@@ -139,23 +144,18 @@ add_action('admin_post_wl_save_home_sections', 'wl_save_home_sections');
 
 function wl_save_home_sections()
 {
-    // ── Security ────────────────────────────────────────────────
     if (!current_user_can('edit_theme_options')) {
         wp_die(__('Bạn không có quyền thực hiện thao tác này.', 'wanderland'));
     }
 
     check_admin_referer('wl_home_sections_save', 'wl_home_nonce');
 
-    // ── Xác định section đang active ────────────────────────────
-    // FIX: Dùng wl_active_tab từ form thay vì loop tất cả sections.
-    // wl_active_tab đã có sẵn trong form (hidden input) nhưng chưa được dùng.
     $active_tab = isset($_POST['wl_active_tab'])
         ? sanitize_key($_POST['wl_active_tab'])
         : '';
 
     $sections = wl_get_home_sections();
 
-    // Validate: active_tab phải là một section hợp lệ
     if (empty($active_tab) || !array_key_exists($active_tab, $sections)) {
         wp_redirect(add_query_arg(array(
             'page' => 'wl-home-sections',
@@ -164,52 +164,37 @@ function wl_save_home_sections()
         exit;
     }
 
-    // ── Chỉ save section đang active ────────────────────────────
-    // FIX: Không loop tất cả sections nữa — tránh ghi đè array() rỗng
-    // lên các sections khác không có trong $_POST.
     $section = $sections[$active_tab];
     $option_key = 'wl_section_' . $active_tab;
 
     if (isset($_POST[$option_key]) && is_array($_POST[$option_key])) {
         $post_ids = array_map('absint', $_POST[$option_key]);
-        $post_ids = array_filter($post_ids);                                        // bỏ ID = 0
+        $post_ids = array_filter($post_ids);
         $max = isset($section['max_posts']) ? (int) $section['max_posts'] : 10;
-        $post_ids = array_slice(array_values($post_ids), 0, $max);                 // giới hạn + reindex
-
+        $post_ids = array_slice(array_values($post_ids), 0, $max);
         update_option($option_key, $post_ids);
     } else {
-        // Không có bài nào được chọn → lưu mảng rỗng cho section này
         update_option($option_key, array());
     }
 
-    // ── Redirect về đúng tab sau khi lưu ────────────────────────
-    // FIX: Thêm 'tab' vào query arg để sau khi save không nhảy về tab đầu tiên.
     wp_redirect(add_query_arg(array(
         'page' => 'wl-home-sections',
-        'tab' => $active_tab,   // ← thêm mới
+        'tab' => $active_tab,
         'saved' => '1',
     ), admin_url('themes.php')));
     exit;
 }
 
+
 // ═══════════════════════════════════════════════════════════════
-//  5. HELPER: GET POSTS FOR A SECTION
-//  Dùng trong front-page.php và các template khác
+//  5. HELPER FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
 
-/**
- * Lấy WP_Query cho một section cụ thể.
- *
- * @param string $section_key   Key của section (vd: 'hero_slider')
- * @param array  $query_args    WP_Query args bổ sung (override)
- * @return WP_Query|false
- */
 function wl_get_section_query($section_key, $query_args = array())
 {
     $option_key = 'wl_section_' . $section_key;
     $post_ids = get_option($option_key, array());
 
-    // Nếu chưa có config → fallback về latest posts
     if (empty($post_ids)) {
         $sections = wl_get_home_sections();
         $max = isset($sections[$section_key]['max_posts']) ? $sections[$section_key]['max_posts'] : 5;
@@ -230,25 +215,18 @@ function wl_get_section_query($section_key, $query_args = array())
         return new WP_Query(array_merge($defaults, $query_args));
     }
 
-    // Có config → query theo post IDs, giữ đúng thứ tự đã set
     $defaults = array(
         'post_type' => 'post',
         'post_status' => 'publish',
         'posts_per_page' => count($post_ids),
         'post__in' => $post_ids,
-        'orderby' => 'post__in', // Giữ thứ tự đã kéo thả
+        'orderby' => 'post__in',
         'ignore_sticky_posts' => true,
     );
 
     return new WP_Query(array_merge($defaults, $query_args));
 }
 
-/**
- * Lấy array post IDs của một section.
- *
- * @param string $section_key
- * @return array
- */
 function wl_get_section_post_ids($section_key)
 {
     return (array) get_option('wl_section_' . $section_key, array());
@@ -269,14 +247,12 @@ function wl_render_home_options_page()
     $active_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'hero_slider';
     $saved_notice = isset($_GET['saved']) && $_GET['saved'] === '1';
 
-    // Validate active tab
     if (!array_key_exists($active_tab, $sections)) {
         $active_tab = array_key_first($sections);
     }
     ?>
 <div class="wl-options-wrap">
 
-    <!-- ── Page Header ── -->
     <div class="wl-options-header">
         <div class="wl-options-header-inner">
             <div class="wl-options-brand">
@@ -297,7 +273,6 @@ function wl_render_home_options_page()
         </div>
     </div>
 
-    <!-- ── Saved Notice ── -->
     <?php if ($saved_notice): ?>
     <div class="wl-notice wl-notice-success" id="wl-saved-notice">
         <span class="dashicons dashicons-yes-alt"></span>
@@ -305,7 +280,6 @@ function wl_render_home_options_page()
     </div>
     <?php endif; ?>
 
-    <!-- ── Tab Nav ── -->
     <nav class="wl-tab-nav" role="tablist">
         <?php foreach ($sections as $key => $section):
                 $is_active = $key === $active_tab;
@@ -333,14 +307,12 @@ function wl_render_home_options_page()
         <?php endforeach; ?>
     </nav>
 
-    <!-- ── Section Content ── -->
     <?php
         $current_section = $sections[$active_tab];
         $option_key = 'wl_section_' . $active_tab;
         $saved_ids = wl_get_section_post_ids($active_tab);
         $max_posts = isset($current_section['max_posts']) ? (int) $current_section['max_posts'] : 8;
 
-        // Load saved post objects
         $saved_posts = array();
         if (!empty($saved_ids)) {
             $saved_query = new WP_Query(array(
@@ -372,14 +344,12 @@ function wl_render_home_options_page()
                         <h2><?php esc_html_e('Thêm bài viết', 'wanderland'); ?></h2>
                         <p class="wl-panel-desc">
                             <?php printf(
-                                    /* translators: %d: max posts number */
                                     esc_html__('Tìm và thêm bài viết. Tối đa %d bài.', 'wanderland'),
                                     $max_posts
                                 ); ?>
                         </p>
                     </div>
 
-                    <!-- Search Input -->
                     <div class="wl-search-box">
                         <span class="dashicons dashicons-search wl-search-icon"></span>
                         <input type="text" id="wl-post-search" class="wl-search-input"
@@ -388,7 +358,6 @@ function wl_render_home_options_page()
                         <span class="wl-search-spinner" id="wl-search-spinner" aria-hidden="true"></span>
                     </div>
 
-                    <!-- Search Results Dropdown -->
                     <div class="wl-search-results" id="wl-search-results" role="listbox"
                         aria-label="<?php esc_attr_e('Kết quả tìm kiếm', 'wanderland'); ?>">
                         <div class="wl-search-placeholder">
@@ -397,7 +366,6 @@ function wl_render_home_options_page()
                         </div>
                     </div>
 
-                    <!-- Section info -->
                     <div class="wl-section-info-card">
                         <span class="dashicons <?php echo esc_attr($current_section['icon']); ?>"></span>
                         <div>
@@ -420,12 +388,10 @@ function wl_render_home_options_page()
                         </div>
                     </div>
 
-                    <!-- Sortable list -->
                     <div class="wl-sortable-list <?php echo empty($saved_posts) ? 'is-empty' : ''; ?>"
                         id="wl-sortable-list" role="list"
                         aria-label="<?php esc_attr_e('Danh sách bài viết, kéo để sắp xếp', 'wanderland'); ?>">
 
-                        <!-- Empty state -->
                         <div class="wl-empty-state" id="wl-empty-state"
                             <?php echo !empty($saved_posts) ? 'style="display:none"' : ''; ?>>
                             <span class="dashicons dashicons-plus-alt2 wl-empty-icon"></span>
@@ -435,7 +401,6 @@ function wl_render_home_options_page()
                             </p>
                         </div>
 
-                        <!-- Saved posts -->
                         <?php foreach ($saved_posts as $post):
                                 $thumbnail_url = get_the_post_thumbnail_url($post->ID, 'thumbnail');
                                 $category = get_the_category($post->ID);
@@ -499,7 +464,6 @@ function wl_render_home_options_page()
 
                     </div><!-- .wl-sortable-list -->
 
-                    <!-- Save Button -->
                     <div class="wl-save-row">
                         <button type="submit" class="wl-save-btn" id="wl-save-btn">
                             <span class="dashicons dashicons-saved"></span>
@@ -518,4 +482,189 @@ function wl_render_home_options_page()
 
 </div><!-- .wl-options-wrap -->
 <?php
+}
+
+
+/* ── Customizer: Tours Slider ── */
+add_action('customize_register', 'vy_tours_slider_customizer');
+
+function vy_tours_slider_customizer($wp_customize)
+{
+    $wp_customize->add_section('vy_tours_slider', [
+        'title' => __('Featured Tours Slider (Home)', 'voya'),
+        'description' => __('Slider bài viết dạng portrait card ngay dưới About section. Chọn bài trong Admin → Home Sections → Featured Tours Slider.', 'voya'),
+        'priority' => 35,
+    ]);
+
+    $wp_customize->add_setting('vy_tours_label', [
+        'default' => 'Khám phá ngay',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('vy_tours_label', [
+        'label' => __('Label nhỏ phía trên tiêu đề', 'voya'),
+        'section' => 'vy_tours_slider',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('vy_tours_title', [
+        'default' => 'Tour nổi bật',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('vy_tours_title', [
+        'label' => __('Tiêu đề (phần thường)', 'voya'),
+        'section' => 'vy_tours_slider',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('vy_tours_title_em', [
+        'default' => 'của chúng tôi',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('vy_tours_title_em', [
+        'label' => __('Tiêu đề (phần in nghiêng màu accent)', 'voya'),
+        'description' => __('Để trống nếu không cần.', 'voya'),
+        'section' => 'vy_tours_slider',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('vy_tours_count', [
+        'default' => 8,
+        'sanitize_callback' => 'absint',
+        'transport' => 'refresh',
+    ]);
+    $wp_customize->add_control('vy_tours_count', [
+        'label' => __('Số bài tối đa trong slider', 'voya'),
+        'description' => __('Tối thiểu 4, tối đa 12. Desktop hiện 4 bài mỗi lần.', 'voya'),
+        'section' => 'vy_tours_slider',
+        'type' => 'number',
+        'input_attrs' => ['min' => 4, 'max' => 12, 'step' => 1],
+    ]);
+}
+
+
+/* ── Meta box: Tour Duration ── */
+add_action('add_meta_boxes', 'vy_tour_duration_meta_box');
+
+function vy_tour_duration_meta_box()
+{
+    add_meta_box(
+        'vy_tour_duration',
+        __('Tour Duration (Badge)', 'voya'),
+        'vy_tour_duration_cb',
+        'post',
+        'side',
+        'default'
+    );
+}
+
+function vy_tour_duration_cb($post)
+{
+    wp_nonce_field('vy_tour_duration_save', 'vy_tour_duration_nonce');
+    $val = get_post_meta($post->ID, '_vy_tour_duration', true);
+    ?>
+<p style="margin-bottom:6px;font-size:12px;color:#666;">
+    <?php esc_html_e('Hiển thị trên badge ảnh trong Tours Slider.', 'voya'); ?><br>
+    <?php esc_html_e('Ví dụ: 5 ngày 4 đêm', 'voya'); ?>
+</p>
+<input type="text" name="vy_tour_duration" value="<?php echo esc_attr($val); ?>"
+    style="width:100%;padding:6px 8px;border:1px solid #ddd;border-radius:3px;"
+    placeholder="<?php esc_attr_e('VD: 7 ngày 6 đêm', 'voya'); ?>">
+<?php
+}
+
+add_action('save_post_post', 'vy_save_tour_duration');
+
+function vy_save_tour_duration($post_id)
+{
+    if (
+        !isset($_POST['vy_tour_duration_nonce'])
+        || !wp_verify_nonce($_POST['vy_tour_duration_nonce'], 'vy_tour_duration_save')
+    )
+        return;
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+        return;
+    if (!current_user_can('edit_post', $post_id))
+        return;
+
+    if (isset($_POST['vy_tour_duration'])) {
+        update_post_meta(
+            $post_id,
+            '_vy_tour_duration',
+            sanitize_text_field($_POST['vy_tour_duration'])
+        );
+    }
+}
+
+
+/* ── Customizer: Top Popular Blogs (S8) — MỚI ── */
+add_action('customize_register', 'vy_topblogs_customizer');
+
+function vy_topblogs_customizer($wp_customize)
+{
+    $wp_customize->add_section('vy_topblogs', [
+        'title' => __('Top Popular Blogs (Home S8)', 'voya'),
+        'description' => __('Grid 6 bài phổ biến nhất ở cuối trang home. Chọn bài tại Admin → Home Sections → Top Popular Blogs.', 'voya'),
+        'priority' => 40,
+    ]);
+
+    $wp_customize->add_setting('vy_topblogs_label', [
+        'default' => 'Được đọc nhiều nhất',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('vy_topblogs_label', [
+        'label' => __('Label nhỏ phía trên tiêu đề', 'voya'),
+        'section' => 'vy_topblogs',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('vy_topblogs_title', [
+        'default' => 'Top bài viết ',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('vy_topblogs_title', [
+        'label' => __('Tiêu đề (phần thường)', 'voya'),
+        'section' => 'vy_topblogs',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('vy_topblogs_title_em', [
+        'default' => 'nổi bật',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('vy_topblogs_title_em', [
+        'label' => __('Tiêu đề (phần in nghiêng màu accent)', 'voya'),
+        'description' => __('Để trống nếu không cần.', 'voya'),
+        'section' => 'vy_topblogs',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('vy_topblogs_desc', [
+        'default' => 'Những bài viết được yêu thích nhất từ độc giả của chúng tôi.',
+        'sanitize_callback' => 'sanitize_textarea_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('vy_topblogs_desc', [
+        'label' => __('Mô tả ngắn bên dưới tiêu đề', 'voya'),
+        'section' => 'vy_topblogs',
+        'type' => 'textarea',
+    ]);
+
+    $wp_customize->add_setting('vy_topblogs_count', [
+        'default' => 6,
+        'sanitize_callback' => 'absint',
+        'transport' => 'refresh',
+    ]);
+    $wp_customize->add_control('vy_topblogs_count', [
+        'label' => __('Số bài hiển thị', 'voya'),
+        'description' => __('Desktop hiện 6 card. Tối thiểu 3, tối đa 12.', 'voya'),
+        'section' => 'vy_topblogs',
+        'type' => 'number',
+        'input_attrs' => ['min' => 3, 'max' => 12, 'step' => 1],
+    ]);
 }

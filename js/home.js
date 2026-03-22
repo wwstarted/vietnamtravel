@@ -1,18 +1,274 @@
-/**
- * VOYA — home.js
- * 1. Hero Slider     — autoplay, touch, keyboard, progress bar
- * 2. Featured Slider — 3→2→1 responsive, header arrows
- * 3. Social Share    — data-share popup (bỏ inline onclick)
- *
- * Fix so với version trước:
- *  - Back-to-top REMOVED: đã có trong footer.js, không cần duplicate
- *  - Social share: dùng data-share attr thay vì inline onclick (CSP safe)
- *  - slides[0].classList.add('is-active') di chuyển VÀO sau triggerEnter
- *    để tránh flash trắng trước khi animation chạy
- */
-
 (function () {
   "use strict";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var wrap = document.querySelector(".vy-dest-slider__wrap");
+    if (!wrap) return;
+
+    var viewport = wrap.querySelector(".vy-dest-slider__viewport");
+    var track = wrap.querySelector(".vy-dest-slider__track");
+    var cards = Array.from(
+      track ? track.querySelectorAll(".vy-dest-slider__card") : [],
+    );
+    var btnPrev = document.querySelector(".vy-dest-slider__arrow--prev");
+    var btnNext = document.querySelector(".vy-dest-slider__arrow--next");
+
+    var GAP = 20;
+    var total = cards.length;
+    var current = 0;
+
+    if (!viewport || !track || total === 0) return;
+
+    /* ── Visible cards per breakpoint ── */
+    function getVisible() {
+      var w = window.innerWidth;
+      if (w <= 767) return 1;
+      if (w <= 1199) return 3;
+      return 4;
+    }
+
+    /* ── Card width ── */
+    function cardWidth() {
+      var visible = getVisible();
+      var totalGaps = GAP * (visible - 1);
+      return (viewport.offsetWidth - totalGaps) / visible;
+    }
+
+    /* ── Set all card widths ── */
+    function setWidths() {
+      var w = cardWidth();
+      cards.forEach(function (c) {
+        c.style.width = w + "px";
+      });
+    }
+
+    /* ── Move to index ── */
+    function moveTo(idx) {
+      var visible = getVisible();
+      var maxIdx = Math.max(0, total - visible);
+      current = Math.max(0, Math.min(idx, maxIdx));
+
+      var offset = current * (cardWidth() + GAP);
+      track.style.transform = "translateX(-" + offset + "px)";
+
+      if (btnPrev) btnPrev.disabled = current === 0;
+      if (btnNext) btnNext.disabled = current >= maxIdx;
+    }
+
+    /* ── Arrow buttons ── */
+    if (btnPrev)
+      btnPrev.addEventListener("click", function () {
+        moveTo(current - 1);
+      });
+    if (btnNext)
+      btnNext.addEventListener("click", function () {
+        moveTo(current + 1);
+      });
+
+    /* ── Keyboard ── */
+    wrap.setAttribute("tabindex", "0");
+    wrap.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        moveTo(current - 1);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        moveTo(current + 1);
+      }
+    });
+
+    /* ── Touch swipe ── */
+    var touchX = 0,
+      touchY = 0,
+      swiping = false;
+
+    viewport.addEventListener(
+      "touchstart",
+      function (e) {
+        touchX = e.touches[0].clientX;
+        touchY = e.touches[0].clientY;
+        swiping = true;
+      },
+      { passive: true },
+    );
+
+    viewport.addEventListener(
+      "touchmove",
+      function (e) {
+        if (!swiping) return;
+        /* Vertical scroll → cancel swipe */
+        if (
+          Math.abs(e.touches[0].clientY - touchY) >
+          Math.abs(e.touches[0].clientX - touchX)
+        ) {
+          swiping = false;
+        }
+      },
+      { passive: true },
+    );
+
+    viewport.addEventListener(
+      "touchend",
+      function (e) {
+        if (!swiping) return;
+        swiping = false;
+        var dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 48) {
+          dx < 0 ? moveTo(current + 1) : moveTo(current - 1);
+        }
+      },
+      { passive: true },
+    );
+
+    /* ── Resize: recalculate widths + re-clamp ── */
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        setWidths();
+        moveTo(current); /* re-clamp nếu visible count đổi */
+      }, 120);
+    });
+
+    /* ── Init ── */
+    setWidths();
+    moveTo(0);
+  });
+
+  /* ═══════════════════════════════════════════════════════════
+   FEATURED TOURS SLIDER — append này vào cuối home.js
+   (ngay trước dòng đóng của IIFE cuối cùng nếu có,
+   hoặc paste vào trong block DOMContentLoaded đầu tiên)
+   ═══════════════════════════════════════════════════════════ */
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var wrap = document.querySelector(".vy-tours__slider-wrap");
+    if (!wrap) return;
+
+    var viewport = wrap.querySelector(".vy-tours__viewport");
+    var track = wrap.querySelector(".vy-tours__track");
+    var cards = Array.from(
+      track ? track.querySelectorAll(".vy-tours__card") : [],
+    );
+    var btnPrev = document.querySelector(".vy-tours__arrow--prev");
+    var btnNext = document.querySelector(".vy-tours__arrow--next");
+
+    var GAP = 20; /* matches CSS gap */
+    var total = cards.length;
+    var current = 0;
+
+    if (!viewport || !track || total === 0) return;
+
+    /* ── Visible cards per breakpoint ── */
+    function getVisible() {
+      var w = window.innerWidth;
+      if (w <= 560) return 1;
+      if (w <= 767) return 2;
+      if (w <= 1199) return 3;
+      return 4;
+    }
+
+    /* ── Card width calculation ── */
+    function cardWidth() {
+      var visible = getVisible();
+      var totalGaps = GAP * (visible - 1);
+      return (viewport.offsetWidth - totalGaps) / visible;
+    }
+
+    /* ── Set all card widths ── */
+    function setWidths() {
+      var w = cardWidth();
+      cards.forEach(function (c) {
+        c.style.width = w + "px";
+      });
+    }
+
+    /* ── Move to index ── */
+    function moveTo(idx) {
+      var visible = getVisible();
+      var maxIdx = Math.max(0, total - visible);
+      current = Math.max(0, Math.min(idx, maxIdx));
+      var offset = current * (cardWidth() + GAP);
+      track.style.transform = "translateX(-" + offset + "px)";
+      if (btnPrev) btnPrev.disabled = current === 0;
+      if (btnNext) btnNext.disabled = current >= maxIdx;
+    }
+
+    /* ── Arrow buttons ── */
+    if (btnPrev)
+      btnPrev.addEventListener("click", function () {
+        moveTo(current - 1);
+      });
+    if (btnNext)
+      btnNext.addEventListener("click", function () {
+        moveTo(current + 1);
+      });
+
+    /* ── Keyboard ── */
+    wrap.setAttribute("tabindex", "0");
+    wrap.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        moveTo(current - 1);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        moveTo(current + 1);
+      }
+    });
+
+    /* ── Touch swipe ── */
+    var touchX = 0,
+      touchY = 0,
+      swiping = false;
+    viewport.addEventListener(
+      "touchstart",
+      function (e) {
+        touchX = e.touches[0].clientX;
+        touchY = e.touches[0].clientY;
+        swiping = true;
+      },
+      { passive: true },
+    );
+    viewport.addEventListener(
+      "touchmove",
+      function (e) {
+        if (!swiping) return;
+        if (
+          Math.abs(e.touches[0].clientY - touchY) >
+          Math.abs(e.touches[0].clientX - touchX)
+        )
+          swiping = false;
+      },
+      { passive: true },
+    );
+    viewport.addEventListener(
+      "touchend",
+      function (e) {
+        if (!swiping) return;
+        swiping = false;
+        var dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 48)
+          dx < 0 ? moveTo(current + 1) : moveTo(current - 1);
+      },
+      { passive: true },
+    );
+
+    /* ── Resize: recalculate widths and re-clamp position ── */
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        setWidths();
+        moveTo(current); /* re-clamp in case visible count changed */
+      }, 120);
+    });
+
+    /* ── Init ── */
+    setWidths();
+    moveTo(0);
+  }); /* end DOMContentLoaded — Tours Slider */
 
   /* ═══════════════════════════════════════════════════════════
      1. HERO SLIDER

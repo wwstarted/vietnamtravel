@@ -147,25 +147,62 @@ add_action('customize_register', 'wl_destinations_customizer');
 
 function wl_destinations_customizer($wp_customize)
 {
-
-    $wp_customize->add_section('wl_destinations', array(
-        'title' => __('Destinations Timeline (Home)', 'wanderland'),
+    $wp_customize->add_section('wl_destinations', [
+        'title' => __('Destinations Slider (Home)', 'voya'),
+        'description' => __('Portrait slider điểm đến. Thêm/sửa/xoá tại WP Admin → Destinations. Sắp xếp thứ tự bằng cách kéo thả trong admin (Page Attributes → Order).', 'voya'),
         'priority' => 37,
-    ));
+    ]);
 
-    // Số lượng hiển thị
-    $wp_customize->add_setting('wl_destinations_count', array(
-        'default' => 9,
+    /* ── Label nhỏ ── */
+    $wp_customize->add_setting('vy_dest_slider_label', [
+        'default' => 'Bản đồ hành trình',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('vy_dest_slider_label', [
+        'label' => __('Label nhỏ phía trên tiêu đề', 'voya'),
+        'section' => 'wl_destinations',
+        'type' => 'text',
+    ]);
+
+    /* ── Title chính ── */
+    $wp_customize->add_setting('vy_dest_slider_title', [
+        'default' => 'Điểm đến ',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('vy_dest_slider_title', [
+        'label' => __('Tiêu đề (phần thường)', 'voya'),
+        'section' => 'wl_destinations',
+        'type' => 'text',
+    ]);
+
+    /* ── Title italic ── */
+    $wp_customize->add_setting('vy_dest_slider_title_em', [
+        'default' => 'Đông Nam Á',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('vy_dest_slider_title_em', [
+        'label' => __('Tiêu đề (phần in nghiêng màu accent)', 'voya'),
+        'description' => __('Để trống nếu không cần.', 'voya'),
+        'section' => 'wl_destinations',
+        'type' => 'text',
+    ]);
+
+    /* ── Số lượng hiển thị ── */
+    $wp_customize->add_setting('wl_destinations_count', [
+        'default' => 8,
         'sanitize_callback' => 'absint',
         'transport' => 'refresh',
-    ));
-    $wp_customize->add_control('wl_destinations_count', array(
-        'label' => __('Số địa danh hiển thị', 'wanderland'),
-        'description' => __('Tối đa bao nhiêu địa danh xuất hiện trên timeline.', 'wanderland'),
+    ]);
+    $wp_customize->add_control('wl_destinations_count', [
+        'label' => __('Số điểm đến hiển thị trong slider', 'voya'),
+        'description' => __('Desktop hiện 4 card mỗi lần. Tối thiểu 4, tối đa 20.', 'voya'),
         'section' => 'wl_destinations',
         'type' => 'number',
-        'input_attrs' => array('min' => 3, 'max' => 20, 'step' => 1),
-    ));
+        'input_attrs' => ['min' => 4, 'max' => 20, 'step' => 1],
+    ]);
 }
 
 
@@ -246,7 +283,8 @@ function wl_dest_cat_add_fields()
     <label><?php esc_html_e('Icon (default)', 'wanderland'); ?></label>
     <?php wl_dest_cat_image_field('wl_cat_image', ''); ?>
     <p class="description">
-        <?php esc_html_e('Upload icon mặc định (~92×74px). Dạng PNG có nền trong suốt.', 'wanderland'); ?></p>
+        <?php esc_html_e('Upload icon mặc định (~92×74px). Dạng PNG có nền trong suốt.', 'wanderland'); ?>
+    </p>
 </div>
 <div class="form-field">
     <label><?php esc_html_e('Icon (hover)', 'wanderland'); ?></label>

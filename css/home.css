@@ -6,7 +6,7 @@
 
    Contents:
    01. Hero Slider
-   02. Partners Strip
+   02. About / Features Strip  ← đổi từ Partners Strip
    03. Travel Essentials
    04. Newsletter (dark band)
    05. Featured Posts Slider
@@ -26,11 +26,11 @@
 .vy-hero {
   position: relative;
   width: 100%;
-  height: 100vh;
-  min-height: 620px;
-  max-height: 980px;
   overflow: hidden;
   background-color: var(--color-dark);
+  height: calc(100vh - var(--vy-topbar-h) - var(--vy-header-h));
+  min-height: 500px;
+  max-height: 860px;
 }
 
 /* Track */
@@ -72,7 +72,7 @@
     transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Gradient overlay — dày ở bottom-left để text dễ đọc */
+/* Gradient overlay */
 .vy-hero__overlay {
   position: absolute;
   inset: 0;
@@ -100,21 +100,20 @@
   z-index: 3;
   display: flex;
   align-items: flex-end;
-  padding-bottom: 100px; /* space for controls */
+  padding-bottom: 100px;
 }
 
 .vy-hero__content-wrap > .vy-container--wide {
   width: 100%;
 }
 
-/* Content panel — max 640px */
+/* Content panel */
 .vy-hero__content {
   max-width: 640px;
   opacity: 0;
   transform: translateY(32px);
 }
 
-/* Animate-in classes */
 .vy-hero__content.is-visible {
   animation: vy-hero-enter 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
@@ -178,7 +177,6 @@
   color: var(--color-white);
   margin: 0 0 16px;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
-
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -205,7 +203,6 @@
   margin: 0 0 20px;
   max-width: 520px;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
-
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -252,7 +249,7 @@
   padding: 13px 32px;
 }
 
-/* ── Controls: bottom-right ── */
+/* Controls: bottom-right */
 .vy-hero__controls {
   position: absolute;
   bottom: 40px;
@@ -325,7 +322,7 @@
   outline-offset: 2px;
 }
 
-/* Dots — hidden visually, JS still uses for a11y */
+/* Dots — hidden visually, JS a11y only */
 .vy-hero__dots {
   position: absolute;
   bottom: 44px;
@@ -378,7 +375,7 @@
   background: var(--color-accent);
 }
 
-/* Scroll hint — thin animated line at bottom */
+/* Scroll hint */
 .vy-hero__scroll-hint {
   position: absolute;
   bottom: 0;
@@ -430,261 +427,70 @@
 }
 
 /* ============================================================
-   02. PARTNERS STRIP
+   02. ABOUT / FEATURES STRIP
+   Layout: [Left narrow: label + title + desc] | [Right: 3 feature cards]
+   Desktop: 2 cols (28% / 72%) — right chiếm nhiều hơn để nổi bật
+   Tablet: 2 cols thu hẹp
+   Mobile: 1 col stack
    ============================================================ */
 
-.vy-partners {
+.vy-about {
   background: var(--color-white);
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
-  padding: 28px 0;
-  position: relative;
-  z-index: 6;
+  padding: 72px 0;
 }
 
-.vy-partners__inner {
-  display: flex;
+/* 2-column grid — left hẹp hơn, right chiếm phần lớn */
+.vy-about__inner {
+  display: grid;
+  grid-template-columns: 28% 1fr;
+  gap: 0 64px;
   align-items: center;
-  gap: 40px;
 }
 
-.vy-partners__label {
+/* ── LEFT column ── */
+.vy-about__left {
+  /* Bỏ border-right — không ngăn cách cứng giữa 2 col */
+}
+
+.vy-about__label {
+  display: inline-block;
   font-family: var(--font-body);
   font-size: var(--fs-xs);
   font-weight: var(--fw-semibold);
   letter-spacing: var(--ls-widest);
   text-transform: uppercase;
-  color: var(--color-text-light);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.vy-partners__list {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
-  gap: 16px;
-}
-
-.vy-partners__item {
-  display: block;
-  position: relative;
-  line-height: 0;
-  flex: 1;
-  max-width: 140px;
-  height: 64px;
-}
-
-.vy-partners__logo {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transition: opacity var(--transition-base);
-}
-
-.vy-partners__logo--hover {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-}
-
-.vy-partners__item:hover .vy-partners__logo--default {
-  opacity: 0;
-}
-.vy-partners__item:hover .vy-partners__logo--hover {
-  opacity: 1;
-}
-
-/* ============================================================
-   03. TRAVEL ESSENTIALS
-   ============================================================ */
-
-.vy-essentials {
-  background-color: var(--color-off-white);
-  overflow: hidden;
-}
-
-/* Section header */
-.vy-essentials__header {
-  text-align: center;
-  margin-bottom: 72px;
-}
-
-.vy-essentials__header .vy-section-title {
-  margin-top: 10px;
-}
-
-/* List */
-.vy-essentials__list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-/* Single item */
-.vy-essentials__item {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 64px;
-  align-items: center;
-  padding: 0 0 88px;
-  position: relative;
-}
-
-/* Normal: img LEFT (col 1), content RIGHT (col 2) */
-.vy-essentials__img-col {
-  grid-column: 1;
-  grid-row: 1;
-}
-.vy-essentials__content-col {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-/* Reversed: img RIGHT (col 2), content LEFT (col 1) */
-.vy-essentials__item.is-reversed .vy-essentials__img-col {
-  grid-column: 2;
-}
-.vy-essentials__item.is-reversed .vy-essentials__content-col {
-  grid-column: 1;
-}
-
-.vy-essentials__item:last-child {
-  padding-bottom: 0;
-}
-
-/* Large index number — decorative, behind the item */
-.vy-essentials__index {
-  position: absolute;
-  top: -28px;
-  left: -24px;
-  font-family: var(--font-heading);
-  font-size: clamp(5rem, 10vw, 9rem);
-  font-weight: var(--fw-light);
-  line-height: 1;
-  color: rgba(184, 157, 110, 0.08);
-  letter-spacing: -0.04em;
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-
-.vy-essentials__item.is-reversed .vy-essentials__index {
-  left: auto;
-  right: -24px;
-}
-
-/* Image column */
-.vy-essentials__img-col {
-  position: relative;
-  z-index: 1;
-}
-
-.vy-essentials__img-link {
-  display: block;
-  overflow: hidden;
-  /* padding-top trick: 3/2 ratio = 66.67% — chắc hơn height fixed */
-  position: relative;
-  padding-top: 66.67%;
-}
-
-.vy-essentials__img-link img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.vy-essentials__img-link:hover img {
-  transform: scale(1.04);
-}
-
-.vy-essentials__img-placeholder {
-  position: absolute;
-  inset: 0;
-  background: var(--color-light-gray);
-  display: block;
-}
-
-/* Category tag on image */
-.vy-essentials__cat {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  display: inline-block;
-  padding: 7px 16px;
-  background: var(--color-white);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--ls-wider);
-  text-transform: uppercase;
-  color: var(--color-primary);
-  text-decoration: none;
-  transition:
-    background var(--transition-fast),
-    color var(--transition-fast);
-}
-
-.vy-essentials__cat:hover {
-  background: var(--color-accent);
-  color: var(--color-white);
-}
-
-/* Content column */
-.vy-essentials__content-col {
-  position: relative;
-  z-index: 1;
-  padding: 8px 0;
-}
-
-.vy-essentials__meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-light);
-  font-style: italic;
-  color: var(--color-text-light);
-  margin-bottom: 16px;
-  letter-spacing: 0.03em;
-}
-
-.vy-essentials__meta a {
-  color: inherit;
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-.vy-essentials__meta a:hover {
   color: var(--color-accent);
+  margin-bottom: 14px;
 }
 
-.vy-essentials__post-title {
+/* Underline accent dưới label — như site mẫu */
+.vy-about__label::after {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: var(--color-accent);
+  margin-top: 8px;
+}
+
+.vy-about__title {
   font-family: var(--font-heading);
-  font-size: clamp(1.5rem, 2.2vw, 2.1rem);
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
   font-weight: var(--fw-light);
   line-height: var(--lh-snug);
   color: var(--color-primary);
-  margin: 0 0 18px;
+  margin: 0 0 20px;
   letter-spacing: -0.01em;
 }
 
-.vy-essentials__post-title a {
-  color: inherit;
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-.vy-essentials__post-title a:hover {
+.vy-about__title em {
+  font-style: italic;
   color: var(--color-accent);
 }
 
-.vy-essentials__excerpt {
+.vy-about__desc {
   font-size: var(--fs-sm);
   font-weight: var(--fw-light);
   line-height: var(--lh-relaxed);
@@ -692,23 +498,309 @@
   margin: 0 0 28px;
 }
 
-/* Btn--text override for FA icon */
-.vy-essentials__content-col .vy-btn--text i {
-  font-size: 10px;
-  margin-top: 1px;
+/* Optional CTA link */
+.vy-about__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition:
+    color var(--transition-fast),
+    gap var(--transition-fast);
 }
 
-/* Horizontal rule between items */
-.vy-essentials__item:not(:last-child)::after {
-  content: "";
+.vy-about__cta:hover {
+  color: var(--color-accent);
+  gap: 12px;
+}
+
+.vy-about__cta i {
+  font-size: 10px;
+}
+
+/* ── RIGHT column: 3 cards ── */
+.vy-about__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px; /* gap giữa cards thay cho divider */
+}
+
+/* Single card — bo góc + border nhẹ như ảnh mẫu */
+.vy-about__card {
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px; /* bo góc */
+  background: var(--color-white);
+  transition:
+    box-shadow var(--transition-base),
+    border-color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.vy-about__card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+}
+
+/* Icon wrapper — line style giống site mẫu (outline only) */
+.vy-about__card-icon {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.vy-about__card:hover .vy-about__card-icon {
+  border-color: var(--color-accent);
+  background: var(--color-accent-pale);
+}
+
+.vy-about__card-icon img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
   display: block;
+  /* Dùng filter để icon SVG/PNG đơn sắc match màu primary */
+  filter: opacity(0.65);
+  transition: filter var(--transition-fast);
+}
+
+.vy-about__card:hover .vy-about__card-icon img {
+  filter: opacity(1);
+}
+
+/* Fallback FA icon — line style */
+.vy-about__card-icon i {
+  font-size: 20px;
+  color: var(--color-secondary);
+  transition: color var(--transition-fast);
+}
+
+.vy-about__card:hover .vy-about__card-icon i {
+  color: var(--color-accent);
+}
+
+/* Card text */
+.vy-about__card-title {
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+  color: var(--color-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.vy-about__card-desc {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-relaxed);
+  color: var(--color-text-light);
+  margin: 0;
+  flex: 1;
+}
+
+/* ============================================================
+   03. FEATURED TOURS SLIDER
+   Portrait cards (ratio ~255:348) | 4 desktop | 3 tablet | 2 sm-tablet | 1 mobile
+   Arrows integrated in section header (left title / right arrows)
+   ============================================================ */
+
+.vy-tours {
+  background: var(--color-off-white);
+  overflow: hidden;
+}
+
+/* Section header */
+.vy-tours__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.vy-tours__header-left .vy-section-title {
+  margin-top: 8px;
+}
+
+/* Header arrows */
+.vy-tours__header-arrows {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+.vy-tours__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  color: var(--color-primary);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 50%;
+  outline: none;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.vy-tours__arrow:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.vy-tours__arrow:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.vy-tours__arrow:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Slider viewport — clips overflow cards */
+.vy-tours__slider-wrap {
+  overflow: hidden;
+}
+
+.vy-tours__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.vy-tours__track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.52s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* ── Single card ── */
+.vy-tours__card {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  /* width set by JS */
+}
+
+/* Portrait image wrapper: 255:348 ratio ≈ 136.5% */
+.vy-tours__card-img {
+  position: relative;
+  overflow: hidden;
+  padding-top: 136.5%;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  background: var(--color-light-gray);
+}
+
+.vy-tours__img-link {
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.vy-tours__card-img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.vy-tours__img-link:hover img {
+  transform: scale(1.04);
+}
+
+.vy-tours__img-placeholder {
+  position: absolute;
+  inset: 0;
+  background: var(--color-light-gray);
+}
+
+/* Badge overlay: location + duration at bottom of image */
+.vy-tours__badge {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: var(--color-border);
-  grid-column: 1 / -1;
+  padding: 8px 12px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 100%);
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  color: var(--color-white);
+  letter-spacing: 0.03em;
+  pointer-events: none;
+}
+
+.vy-tours__badge i {
+  font-size: 10px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* Card body */
+.vy-tours__card-body {
+  flex: 1;
+}
+
+.vy-tours__card-title {
+  font-family: var(--font-heading);
+  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-snug);
+  color: var(--color-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.vy-tours__card-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.vy-tours__card-title a:hover {
+  color: var(--color-accent);
 }
 
 /* ============================================================
@@ -716,13 +808,12 @@
    ============================================================ */
 
 .vy-newsletter {
-  background: #252523; /* matches footer bg */
+  background: #252523;
   padding: 96px 0;
   position: relative;
   overflow: hidden;
 }
 
-/* Subtle grain texture */
 .vy-newsletter::before {
   content: "";
   position: absolute;
@@ -738,7 +829,6 @@
   text-align: center;
 }
 
-/* Light label override */
 .vy-label--light {
   color: var(--color-accent);
 }
@@ -766,7 +856,6 @@
   margin: 0 0 40px;
 }
 
-/* Form */
 .vy-newsletter__row {
   display: flex;
   align-items: stretch;
@@ -846,15 +935,22 @@
 }
 
 /* ============================================================
-   05. FEATURED POSTS SLIDER
+   05. FEATURED POSTS SLIDER — Tour Card Style (UPDATED)
+   Thay thế toàn bộ block "05. FEATURED POSTS SLIDER" trong home.css
+ 
+   Layout mới:
+   - Card trắng, bo góc 14px, shadow nhẹ
+   - Image landscape 16:9 + badge overlay bottom (category | duration)
+   - Card body: title + attractions (tags) + "Xem chi tiết" link
+   - Slider 3 → 2 → 1 responsive (JS không đổi)
    ============================================================ */
 
 .vy-featured {
-  background: var(--color-white);
+  background: var(--color-off-white);
   overflow: hidden;
 }
 
-/* Header row: title left + arrows right */
+/* ── Section header ── */
 .vy-featured__header {
   display: flex;
   align-items: flex-end;
@@ -867,26 +963,27 @@
   margin-top: 8px;
 }
 
-/* Header arrows */
 .vy-featured__header-arrows {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  margin-bottom: 4px; /* visual align with title baseline */
+  margin-bottom: 4px;
 }
 
+/* Arrow buttons — circle style */
 .vy-featured__arrow {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
-  background: transparent;
+  background: var(--color-white);
   border: 1px solid var(--color-border);
   color: var(--color-primary);
   font-size: 14px;
   cursor: pointer;
+  border-radius: 50%;
   outline: none;
   transition:
     background var(--transition-fast),
@@ -910,19 +1007,18 @@
   outline-offset: 2px;
 }
 
-/* Slider wrap — full-width, no container constraint */
-/* Slider nằm trong .vy-container — overflow hidden clip cards thừa */
+/* ── Slider viewport ── */
 .vy-featured__slider-wrap {
   overflow: hidden;
+  /* Padding ngang để card đầu/cuối thấy shadow */
+  padding: 4px 0 8px;
 }
 
-/* Viewport: KHÔNG padding — offsetWidth = đúng container content width */
 .vy-featured__viewport {
   overflow: hidden;
   width: 100%;
 }
 
-/* Track: chỉ flex + gap, KHÔNG padding — giống Wanderland gốc */
 .vy-featured__track {
   display: flex;
   gap: 24px;
@@ -930,21 +1026,36 @@
   will-change: transform;
 }
 
-/* Card */
+/* ── Single card ── */
 .vy-featured__card {
   flex-shrink: 0;
-  /* Width set by JS */
+  background: var(--color-white);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  transition:
+    box-shadow var(--transition-base),
+    transform var(--transition-base);
+  /* width set by JS */
 }
 
+.vy-featured__card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
+  transform: translateY(-4px);
+}
+
+/* ── Image wrapper: 16:9 ratio ── */
 .vy-featured__card-img {
   position: relative;
   overflow: hidden;
-  margin-bottom: 16px;
-  padding-top: 62.5%; /* 10/16 = 62.5% — landscape 16:10 */
+  padding-top: 57.25%; /* 318/550 ≈ 57.8% — giống mẫu asiakingtravel */
+  background: var(--color-light-gray);
+  flex-shrink: 0;
 }
 
-/* Chỉ target link ảnh — KHÔNG dùng > a vì .vy-featured__cat cũng là thẻ a con trực tiếp */
-.vy-featured__card-img .vy-featured__img-link {
+.vy-featured__img-link {
   display: block;
   position: absolute;
   inset: 0;
@@ -960,7 +1071,7 @@
   transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.vy-featured__card-img:hover img {
+.vy-featured__img-link:hover img {
   transform: scale(1.04);
 }
 
@@ -970,48 +1081,68 @@
   background: var(--color-light-gray);
 }
 
-/* Category on image */
-.vy-featured__cat {
+/* ── Badge: bottom of image — category | duration ── */
+.vy-featured__badge {
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
-  padding: 5px 12px;
-  background: rgba(255, 255, 255, 0.9);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--color-primary);
-  text-decoration: none;
-  transition:
-    background var(--transition-fast),
-    color var(--transition-fast);
-}
-
-.vy-featured__cat:hover {
-  background: var(--color-accent);
+  right: 0;
+  padding: 10px 14px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.2) 60%,
+    transparent 100%
+  );
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
   color: var(--color-white);
+  letter-spacing: 0.02em;
+  pointer-events: none;
 }
 
-/* Card body */
-.vy-featured__date {
-  display: block;
-  font-size: var(--fs-xs);
+.vy-featured__badge i {
+  font-size: 11px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.vy-featured__badge-sep {
+  opacity: 0.6;
   font-weight: var(--fw-light);
-  font-style: italic;
-  color: var(--color-text-light);
-  margin-bottom: 8px;
-  letter-spacing: 0.04em;
 }
 
+.vy-featured__badge-dur {
+  opacity: 0.9;
+}
+
+/* ── Card body ── */
+.vy-featured__card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 18px;
+  gap: 0;
+}
+
+/* Title */
 .vy-featured__card-title {
   font-family: var(--font-heading);
-  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
   font-weight: var(--fw-light);
   line-height: var(--lh-snug);
   color: var(--color-primary);
-  margin: 0;
+  margin: 0 0 12px;
   letter-spacing: -0.01em;
+  /* 2 dòng max */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .vy-featured__card-title a {
@@ -1024,442 +1155,462 @@
   color: var(--color-accent);
 }
 
-/* ============================================================
-   06. DESTINATIONS CARD GRID
-   ============================================================ */
-
-.vy-destinations {
-  background: var(--color-accent-pale);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Header */
-.vy-destinations__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 48px;
-  position: relative;
-}
-
-.vy-destinations__header-text .vy-section-title {
-  margin-top: 8px;
-}
-
-/* Background watermark */
-.vy-destinations__watermark {
-  font-family: var(--font-body);
-  font-size: clamp(3rem, 8vw, 7rem);
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(184, 157, 110, 0.08);
-  white-space: nowrap;
-  pointer-events: none;
-  user-select: none;
-  line-height: 1;
-  align-self: flex-end;
-  padding-bottom: 4px;
-}
-
-/* Grid — 3 columns */
-.vy-destinations__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
-}
-
-/* Individual card */
-.vy-dest-card {
-  display: block;
-  text-decoration: none;
-  background: var(--color-white);
-  overflow: hidden;
-  transition: box-shadow var(--transition-base);
-  position: relative;
-}
-
-.vy-dest-card:hover {
-  box-shadow: var(--shadow-md);
-  z-index: 2;
-}
-
-/* padding-top trick: 2/3 ratio = 66.67% */
-.vy-dest-card__img {
-  position: relative;
-  overflow: hidden;
-  padding-top: 66.67%;
-}
-
-.vy-dest-card__img img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.vy-dest-card:hover .vy-dest-card__img img {
-  transform: scale(1.05);
-}
-
-.vy-dest-card__img-placeholder {
-  position: absolute;
-  inset: 0;
-  background: var(--color-light-gray);
-}
-
-/* Card body */
-.vy-dest-card__body {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 18px;
-  border-top: 1px solid var(--color-border);
-}
-
-.vy-dest-card__num {
-  font-family: var(--font-heading);
-  font-size: var(--fs-2xl);
+/* Attractions (post tags) */
+.vy-featured__attractions {
+  font-size: var(--fs-xs);
   font-weight: var(--fw-light);
-  color: rgba(184, 157, 110, 0.25);
-  line-height: 1;
-  flex-shrink: 0;
-  min-width: 40px;
-  letter-spacing: -0.02em;
+  color: var(--color-text-light);
+  line-height: var(--lh-relaxed);
+  margin-bottom: 16px;
+  flex: 1;
+
+  /* 3 dòng max, fade out */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.vy-featured__attr-label {
+  font-weight: var(--fw-medium);
+  color: var(--color-secondary);
+  margin-right: 4px;
+}
+
+.vy-featured__attr-list a {
+  color: var(--color-text-light);
+  text-decoration: none;
   transition: color var(--transition-fast);
 }
 
-.vy-dest-card:hover .vy-dest-card__num {
+.vy-featured__attr-list a:hover {
   color: var(--color-accent);
+  text-decoration: underline;
 }
 
-.vy-dest-card__info {
-  flex: 1;
-  min-width: 0;
+.vy-featured__attr-sep {
+  color: var(--color-mid-gray);
+  font-size: 10px;
 }
 
-.vy-dest-card__title {
+/* Bottom row: Learn More */
+.vy-featured__card-btm {
+  display: flex;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  margin-top: auto;
+}
+
+.vy-featured__learn-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-body);
   font-size: var(--fs-xs);
   font-weight: var(--fw-semibold);
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--color-primary);
-  margin: 0 0 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color var(--transition-fast);
-}
-
-.vy-dest-card:hover .vy-dest-card__title {
   color: var(--color-accent);
-}
-
-.vy-dest-card__coords {
-  font-size: 10px;
-  font-weight: var(--fw-light);
-  color: var(--color-text-light);
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  letter-spacing: 0.03em;
-}
-
-.vy-dest-card__arrow {
-  flex-shrink: 0;
-  font-size: 12px;
-  color: var(--color-mid-gray);
+  text-decoration: none;
+  text-transform: uppercase;
   transition:
     color var(--transition-fast),
-    transform var(--transition-fast);
+    gap var(--transition-fast);
 }
 
-.vy-dest-card:hover .vy-dest-card__arrow {
-  color: var(--color-accent);
-  transform: translate(2px, -2px);
+.vy-featured__learn-more::after {
+  content: "→";
+  font-size: 12px;
+  transition: transform var(--transition-fast);
 }
 
-/* ============================================================
-   07. EXPLORE — CATEGORIES + POSTS + CTA
-   ============================================================ */
-
-.vy-explore {
-  background: var(--color-white);
-}
-
-/* ── Categories pills ── */
-.vy-explore__cats-header {
-  margin-bottom: 20px;
-}
-
-.vy-explore__cats-list {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-  border: 1px solid var(--color-border);
-  overflow: hidden;
-  margin-bottom: 0;
-}
-
-.vy-explore__cat-pill {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.vy-featured__learn-more:hover {
+  color: var(--color-accent-dark);
   gap: 10px;
-  flex: 1;
-  padding: 22px 12px;
-  text-decoration: none;
-  border-right: 1px solid var(--color-border);
-  transition: background var(--transition-fast);
-  text-align: center;
 }
 
-.vy-explore__cat-pill:last-child {
-  border-right: none;
+.vy-featured__learn-more:hover::after {
+  transform: translateX(3px);
 }
-
-.vy-explore__cat-pill:hover {
+.vy-dest-slider {
   background: var(--color-accent-pale);
 }
 
-/* Category icon */
-.vy-explore__cat-icon {
-  position: relative;
-  width: 56px;
+/* ── Section header ── */
+.vy-dest-slider__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.vy-dest-slider__header-left .vy-section-title {
+  margin-top: 8px;
+}
+
+/* Arrows */
+.vy-dest-slider__arrows {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+.vy-dest-slider__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
   height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.vy-explore__cat-icon--fa {
-  font-size: 22px;
-  color: var(--color-mid-gray);
-}
-
-.vy-explore__cat-pill:hover .vy-explore__cat-icon--fa {
-  color: var(--color-accent);
-}
-
-.vy-explore__cat-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transition: opacity var(--transition-base);
-}
-
-.vy-explore__cat-img--hover {
-  opacity: 0;
-}
-
-.vy-explore__cat-pill:hover .vy-explore__cat-img--default {
-  opacity: 0;
-}
-.vy-explore__cat-pill:hover .vy-explore__cat-img--hover {
-  opacity: 1;
-}
-
-.vy-explore__cat-name {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--ls-wider);
-  text-transform: uppercase;
-  color: var(--color-primary);
-  transition: color var(--transition-fast);
-  line-height: 1.2;
-}
-
-.vy-explore__cat-pill:hover .vy-explore__cat-name {
-  color: var(--color-accent);
-}
-
-.vy-explore__cat-count {
-  font-size: 10px;
-  font-weight: var(--fw-light);
-  color: var(--color-text-light);
-  line-height: 1;
-}
-
-/* Divider */
-.vy-explore__divider {
-  border: none;
-  border-top: 1px solid var(--color-border);
-  margin: 56px 0 0;
-}
-
-/* ── Bottom row ── */
-.vy-explore__bottom {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 0 72px;
-  align-items: start;
-  padding-top: 56px;
-}
-
-/* Posts 2×2 grid */
-.vy-explore__posts-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px 24px;
-}
-
-.vy-explore__post-card {
-  display: flex;
-  flex-direction: column;
-}
-
-/* padding-top trick: 4/3 ratio = 75% */
-.vy-explore__post-img-link {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  padding-top: 75%;
-  margin-bottom: 14px;
-}
-
-.vy-explore__post-img-link img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.vy-explore__post-img-link:hover img {
-  transform: scale(1.04);
-}
-
-.vy-explore__post-img-placeholder {
-  position: absolute;
-  inset: 0;
-  background: var(--color-light-gray);
-}
-
-.vy-explore__post-meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-light);
-  font-style: italic;
-  color: var(--color-text-light);
-  margin-bottom: 8px;
-}
-
-.vy-explore__post-meta a {
-  color: inherit;
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-.vy-explore__post-meta a:hover {
-  color: var(--color-accent);
-}
-
-.vy-explore__post-title {
-  font-family: var(--font-heading);
-  font-size: clamp(1rem, 1.3vw, 1.2rem);
-  font-weight: var(--fw-light);
-  line-height: var(--lh-snug);
-  color: var(--color-primary);
-  margin: 0;
-  letter-spacing: -0.01em;
-}
-
-.vy-explore__post-title a {
-  color: inherit;
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-.vy-explore__post-title a:hover {
-  color: var(--color-accent);
-}
-
-/* CTA column */
-.vy-explore__cta {
-  position: sticky;
-  top: calc(var(--header-height-desktop, 80px) + 24px);
-  padding: 36px;
-  background: var(--color-off-white);
-  border-left: 3px solid var(--color-accent);
-}
-
-.vy-explore__cta .vy-label {
-  margin-bottom: 14px;
-}
-
-.vy-explore__cta-title {
-  font-family: var(--font-heading);
-  font-size: clamp(1.3rem, 2vw, 1.7rem);
-  font-weight: var(--fw-light);
-  line-height: var(--lh-snug);
-  color: var(--color-primary);
-  margin: 0 0 16px;
-  letter-spacing: -0.01em;
-}
-
-.vy-explore__cta-body {
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-light);
-  line-height: var(--lh-relaxed);
-  color: var(--color-text-light);
-  margin: 0 0 28px;
-}
-
-/* Social share */
-.vy-explore__social {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.vy-explore__social-label {
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
-  color: var(--color-text-light);
-}
-
-.vy-explore__social-links {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.vy-explore__social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+  background: var(--color-white);
   border: 1px solid var(--color-border);
-  font-size: 13px;
-  color: var(--color-secondary);
-  text-decoration: none;
+  color: var(--color-primary);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 50%;
+  outline: none;
   transition:
     background var(--transition-fast),
     border-color var(--transition-fast),
     color var(--transition-fast);
 }
 
-.vy-explore__social-link:hover {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
+.vy-dest-slider__arrow:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
   color: var(--color-white);
+}
+
+.vy-dest-slider__arrow:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.vy-dest-slider__arrow:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── Slider wrap ── */
+.vy-dest-slider__wrap {
+  overflow: visible; /* shadow không bị cắt */
+  padding-bottom: 8px;
+}
+
+.vy-dest-slider__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.vy-dest-slider__track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.52s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* ── Single card ── */
+.vy-dest-slider__card {
+  flex-shrink: 0;
+  /* width set by JS */
+}
+
+.vy-dest-slider__card-link {
+  display: block;
+  text-decoration: none;
+}
+
+/* Portrait image wrapper: 255:345 ≈ 135.3% */
+.vy-dest-slider__img-wrap {
+  position: relative;
+  overflow: hidden;
+  padding-top: 135.3%;
+  border-radius: 12px;
+  background: var(--color-light-gray);
+}
+
+.vy-dest-slider__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.vy-dest-slider__card-link:hover .vy-dest-slider__img {
+  transform: scale(1.06);
+}
+
+.vy-dest-slider__img-placeholder {
+  position: absolute;
+  inset: 0;
+  background: var(--color-light-gray);
+}
+
+/* Gradient overlay — chỉ bottom 50% để làm nổi text */
+.vy-dest-slider__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.68) 0%,
+    rgba(0, 0, 0, 0.18) 40%,
+    transparent 65%
+  );
+  border-radius: 12px;
+  transition: background var(--transition-base);
+}
+
+.vy-dest-slider__card-link:hover .vy-dest-slider__overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.25) 45%,
+    rgba(0, 0, 0, 0.05) 70%
+  );
+}
+
+/* Destination name — bottom center */
+.vy-dest-slider__name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 14px 16px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-white);
+  line-height: 1.2;
+  transition: transform var(--transition-base);
+}
+
+.vy-dest-slider__card-link:hover .vy-dest-slider__name {
+  transform: translateY(-4px);
+}
+
+/* ============================================================
+   07. LATEST NEWS GRID (REPLACE toàn bộ block "07. EXPLORE" cũ)
+ 
+   Layout asymmetric 3-col grid — 4 bài:
+   ┌─────────────────┬───────────┬──────────┐
+   │                 │           │  item_3  │
+   │    item_1       │  item_2   ├──────────┤
+   │   (col span)    │ (col span)│  item_4  │
+   └─────────────────┴───────────┴──────────┘
+ 
+   - Text (category + date + title): overlay bottom trên ảnh
+   - Bo góc 14px, hover scale ảnh
+   - Grid min-height đủ để 2 card nhỏ bên phải cân bằng
+   ============================================================ */
+
+.vy-latestnews {
+  background: var(--color-off-white);
+}
+
+/* ── Section header — center ── */
+.vy-latestnews__header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.vy-latestnews__header .vy-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* ── Grid: 3 cols | 2 rows ── */
+.vy-latestnews__grid {
+  display: grid;
+  grid-template-columns: 42fr 30fr 28fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 14px;
+  /* Chiều cao tổng grid — 2 card nhỏ bên phải cân bằng với 2 card lớn */
+  min-height: 520px;
+}
+
+/* item_1: col 1, span 2 rows */
+.vy-latestnews__item--1 {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+/* item_2: col 2, span 2 rows */
+.vy-latestnews__item--2 {
+  grid-column: 2;
+  grid-row: 1 / 3;
+}
+
+/* item_3: col 3, row 1 */
+.vy-latestnews__item--3 {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+/* item_4: col 3, row 2 */
+.vy-latestnews__item--4 {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+/* ── Single item ── */
+.vy-latestnews__item {
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Image link fills full card */
+.vy-latestnews__img-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  text-decoration: none;
+}
+
+/* Image fills entire link */
+.vy-latestnews__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.vy-latestnews__img-link:hover .vy-latestnews__img {
+  transform: scale(1.05);
+}
+
+.vy-latestnews__img-placeholder {
+  position: absolute;
+  inset: 0;
+  background: var(--color-light-gray);
+}
+
+/* Gradient overlay: đen dần từ bottom */
+.vy-latestnews__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.35) 40%,
+    rgba(0, 0, 0, 0.05) 70%,
+    transparent 100%
+  );
+  border-radius: 14px;
+  transition: background var(--transition-base);
+}
+
+.vy-latestnews__img-link:hover .vy-latestnews__overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.88) 0%,
+    rgba(0, 0, 0, 0.42) 45%,
+    rgba(0, 0, 0, 0.08) 72%,
+    transparent 100%
+  );
+}
+
+/* Content — absolute bottom của card */
+.vy-latestnews__ct {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 18px 18px;
+  z-index: 2;
+}
+
+/* Meta: category + date — inline */
+.vy-latestnews__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.vy-latestnews__cat,
+.vy-latestnews__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  color: rgba(255, 255, 255, 0.82);
+  letter-spacing: 0.03em;
+}
+
+.vy-latestnews__cat i,
+.vy-latestnews__date i {
+  font-size: 10px;
+  color: var(--color-accent);
+}
+
+/* Title */
+.vy-latestnews__title {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-snug);
+  color: var(--color-white);
+  margin: 0;
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+  transition: color var(--transition-fast);
+}
+
+.vy-latestnews__img-link:hover .vy-latestnews__title {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Title size theo vị trí card */
+.vy-latestnews__item--1 .vy-latestnews__title {
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  -webkit-line-clamp: 3;
+}
+
+.vy-latestnews__item--2 .vy-latestnews__title {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  -webkit-line-clamp: 3;
+}
+
+.vy-latestnews__item--3 .vy-latestnews__title,
+.vy-latestnews__item--4 .vy-latestnews__title {
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  -webkit-line-clamp: 2;
+}
+
+/* Clamp title lines */
+.vy-latestnews__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Padding nhỏ hơn cho 2 card nhỏ */
+.vy-latestnews__item--3 .vy-latestnews__ct,
+.vy-latestnews__item--4 .vy-latestnews__ct {
+  padding: 14px 14px 13px;
+}
+
+.vy-latestnews__item--3 .vy-latestnews__meta,
+.vy-latestnews__item--4 .vy-latestnews__meta {
+  margin-bottom: 6px;
+  gap: 8px;
 }
 
 /* ============================================================
@@ -1479,15 +1630,139 @@
 }
 
 /* ============================================================
+   08. TOP POPULAR BLOGS (section cuối — thêm vào home.css)
+ 
+   6 portrait cards | title DƯỚI ảnh | static grid
+   Image ratio: 255:348 ≈ 136.5% (portrait)
+   Responsive: 6 → 3 → 2 → 1
+   ============================================================ */
+
+.vy-topblogs {
+  background: var(--color-off-white);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ── Section header — center ── */
+.vy-topblogs__header {
+  text-align: center;
+  margin-bottom: 44px;
+}
+
+.vy-topblogs__header .vy-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.vy-topblogs__header .vy-section-title {
+  margin-bottom: 14px;
+}
+
+.vy-topblogs__desc {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-relaxed);
+  color: var(--color-text-light);
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* ── Grid: 6 cols desktop ── */
+.vy-topblogs__grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── Single card ── */
+.vy-topblog-card {
+  /* width tự co theo grid */
+}
+
+.vy-topblog-card__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Image link ── */
+.vy-topblog-card__img-link {
+  display: block;
+  text-decoration: none;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+/* Portrait image wrapper: 255:348 ≈ 136.5% */
+.vy-topblog-card__img-wrap {
+  position: relative;
+  overflow: hidden;
+  padding-top: 136.5%;
+  border-radius: 12px;
+  background: var(--color-light-gray);
+}
+
+.vy-topblog-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.vy-topblog-card__img-link:hover .vy-topblog-card__img {
+  transform: scale(1.05);
+}
+
+.vy-topblog-card__img-placeholder {
+  position: absolute;
+  inset: 0;
+  background: var(--color-light-gray);
+}
+
+/* ── Card content: title bên dưới ảnh ── */
+.vy-topblog-card__ct {
+  padding: 0 2px;
+}
+
+.vy-topblog-card__title {
+  font-family: var(--font-heading);
+  font-size: clamp(0.88rem, 1vw, 1rem);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-snug);
+  color: var(--color-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+  /* 3 dòng max */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.vy-topblog-card__title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.vy-topblog-card__title a:hover {
+  color: var(--color-accent);
+}
+
+/* ============================================================
    09. RESPONSIVE — TABLET ≤ 1199px
    ============================================================ */
 
 @media (max-width: 1199px) {
   /* Hero */
   .vy-hero {
-    height: 75vh;
-    min-height: 520px;
-    max-height: 780px;
+    height: calc(100vh - var(--vy-topbar-h) - var(--vy-header-h-mob));
+    min-height: 420px;
+    max-height: 680px;
   }
   .vy-hero__content {
     max-width: 560px;
@@ -1501,33 +1776,27 @@
     left: 32px;
   }
 
-  /* Partners */
-  .vy-partners__inner {
-    gap: 28px;
+  /* About */
+  .vy-about {
+    padding: 56px 0;
   }
-  .vy-partners__item {
-    max-width: 110px;
-    height: 50px;
+  .vy-about__inner {
+    grid-template-columns: 30% 1fr;
+    gap: 0 40px;
   }
-  .vy-partners__label {
-    display: none;
+  .vy-about__cards {
+    gap: 14px;
+  }
+  .vy-about__card {
+    padding: 24px 20px;
   }
 
-  /* Essentials */
-  .vy-essentials__header {
-    margin-bottom: 40px;
+  /* Tours slider — tablet: 3 cards */
+  .vy-tours__header {
+    margin-bottom: 28px;
   }
-  .vy-essentials__item {
-    gap: 0 40px;
-    padding-bottom: 64px;
-  }
-  .vy-essentials__index {
-    font-size: 5rem;
-    top: -20px;
-    left: -16px;
-  }
-  .vy-essentials__item.is-reversed .vy-essentials__index {
-    right: -16px;
+  .vy-tours__card-img {
+    border-radius: 10px;
   }
 
   /* Newsletter */
@@ -1570,6 +1839,69 @@
   .vy-explore__cta {
     padding: 28px;
   }
+
+  .vy-featured__header {
+    margin-bottom: 32px;
+  }
+  .vy-featured__card-body {
+    padding: 18px 16px 16px;
+  }
+
+  .vy-dest-slider__header {
+    margin-bottom: 28px;
+  }
+  .vy-dest-slider__img-wrap {
+    border-radius: 10px;
+  }
+  .vy-dest-slider__overlay {
+    border-radius: 10px;
+  }
+
+  .vy-cruises__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .vy-cruises__header {
+    margin-bottom: 36px;
+  }
+
+  .vy-latestnews__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    min-height: unset;
+    gap: 12px;
+  }
+  .vy-latestnews__item--1 {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    min-height: 320px;
+  }
+  .vy-latestnews__item--2 {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 240px;
+  }
+  .vy-latestnews__item--3 {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 240px;
+  }
+  .vy-latestnews__item--4 {
+    grid-column: 1 / 3;
+    grid-row: 3;
+    min-height: 200px;
+  }
+  .vy-latestnews__header {
+    margin-bottom: 32px;
+  }
+
+  .vy-topblogs__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .vy-topblogs__header {
+    margin-bottom: 32px;
+  }
 }
 
 /* ============================================================
@@ -1579,11 +1911,10 @@
 @media (max-width: 767px) {
   /* Hero */
   .vy-hero {
-    height: 100svh;
-    min-height: 500px;
+    height: calc(100svh - var(--vy-header-h-mob));
+    min-height: 380px;
     max-height: none;
   }
-
   .vy-hero__title {
     font-size: clamp(1.9rem, 7vw, 2.6rem);
     margin-bottom: 10px;
@@ -1614,49 +1945,51 @@
     display: none;
   }
 
-  /* Partners */
-  .vy-partners {
-    padding: 20px 0;
+  /* About — stack to 1 col */
+  .vy-about {
+    padding: 48px 0;
   }
-  .vy-partners__list {
-    gap: 8px;
-    justify-content: center;
+  .vy-about__inner {
+    grid-template-columns: 1fr;
+    gap: 36px 0;
   }
-  .vy-partners__item {
-    height: 40px;
-    max-width: 80px;
+  .vy-about__left {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 32px;
+    text-align: center;
+  }
+  .vy-about__label::after {
+    margin: 8px auto 0;
+  }
+  /* Cards: single col on mobile */
+  .vy-about__cards {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .vy-about__card {
+    padding: 24px 20px;
   }
 
-  /* Essentials */
-  .vy-essentials__header {
-    margin-bottom: 40px;
+  /* Tours slider — mobile: 2 cards */
+  .vy-tours {
+    padding-top: 0;
   }
-  /* Stack to single col — reset grid-column assignments */
-  .vy-essentials__item,
-  .vy-essentials__item.is-reversed {
-    grid-template-columns: 1fr;
-    gap: 0;
-    padding-bottom: 48px;
+  .vy-tours__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
   }
-  /* Image always on top on mobile */
-  .vy-essentials__img-col,
-  .vy-essentials__item.is-reversed .vy-essentials__img-col {
-    grid-column: 1;
-    grid-row: 1;
+  .vy-tours__header-arrows {
+    align-self: flex-end;
   }
-  .vy-essentials__content-col,
-  .vy-essentials__item.is-reversed .vy-essentials__content-col {
-    grid-column: 1;
-    grid-row: 2;
-    padding-top: 20px;
+  .vy-tours__arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 12px;
   }
-  .vy-essentials__index {
-    top: -12px;
-    left: -8px;
-    font-size: 3.5rem;
-  }
-  .vy-essentials__item.is-reversed .vy-essentials__index {
-    right: -8px;
+  .vy-tours__card-img {
+    border-radius: 8px;
   }
 
   /* Newsletter */
@@ -1715,6 +2048,82 @@
   .vy-explore__divider {
     margin: 40px 0 0;
   }
+
+  .vy-featured__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .vy-featured__header-arrows {
+    align-self: flex-end;
+  }
+  .vy-featured__card-body {
+    padding: 16px 14px 14px;
+  }
+  .vy-featured__short-desc {
+    -webkit-line-clamp: 2;
+  }
+
+  .vy-dest-slider__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .vy-dest-slider__arrows {
+    align-self: flex-end;
+  }
+  .vy-dest-slider__arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 12px;
+  }
+  .vy-dest-slider__img-wrap {
+    border-radius: 8px;
+  }
+  .vy-dest-slider__overlay {
+    border-radius: 8px;
+  }
+  .vy-cruises__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .vy-cruise-card__title {
+    font-size: var(--fs-xs);
+    padding: 9px 10px;
+  }
+  .vy-cruises__header {
+    margin-bottom: 28px;
+  }
+
+  .vy-latestnews__grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 12px;
+    min-height: unset;
+  }
+  .vy-latestnews__item--1,
+  .vy-latestnews__item--2,
+  .vy-latestnews__item--3,
+  .vy-latestnews__item--4 {
+    grid-column: 1;
+    grid-row: auto;
+    min-height: 220px;
+  }
+  .vy-latestnews__item--1 {
+    min-height: 280px;
+  }
+  .vy-latestnews__header {
+    margin-bottom: 24px;
+  }
+
+  .vy-topblogs__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .vy-topblogs__header {
+    margin-bottom: 28px;
+  }
 }
 
 /* ============================================================
@@ -1722,7 +2131,16 @@
    ============================================================ */
 
 @media (max-width: 480px) {
+  .vy-featured__card-body {
+    padding: 14px 12px 12px;
+  }
+  .vy-featured__card-title {
+    font-size: 1rem;
+  }
   /* Hero */
+  .vy-hero {
+    min-height: 340px;
+  }
   .vy-hero__cat {
     font-size: 9px;
   }
@@ -1734,19 +2152,26 @@
     font-size: 9px;
   }
 
-  /* Partners */
-  .vy-partners__list {
-    gap: 4px;
+  /* About — compact on small mobile */
+  .vy-about__card {
+    padding: 20px 16px;
+    border-radius: 10px;
   }
-  .vy-partners__item {
-    max-width: 60px;
-    height: 34px;
+  .vy-about__card-icon {
+    width: 44px;
+    height: 44px;
+  }
+  .vy-about__card-icon img {
+    width: 22px;
+    height: 22px;
+  }
+  .vy-about__card-icon i {
+    font-size: 17px;
   }
 
-  /* Essentials */
-  .vy-essentials__img-link img,
-  .vy-essentials__img-placeholder {
-    height: 220px;
+  /* Tours slider — small mobile: 1 card */
+  .vy-tours__card-img {
+    border-radius: 8px;
   }
 
   /* Destinations */
@@ -1758,9 +2183,23 @@
     min-width: 32px;
   }
 
-  /* Explore posts — single column */
+  /* Explore posts — single col */
   .vy-explore__posts-grid {
     grid-template-columns: 1fr;
+  }
+
+  .vy-cruises__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vy-latestnews__item--1,
+  .vy-latestnews__item--2,
+  .vy-latestnews__item--3,
+  .vy-latestnews__item--4 {
+    min-height: 180px;
+  }
+  .vy-latestnews__ct {
+    padding: 14px 12px 12px;
   }
 }
 
@@ -1787,9 +2226,145 @@
     opacity: 0.4;
   }
 
-  .vy-essentials__img-link img,
+  .vy-tours__card-img img,
   .vy-featured__card-img img,
   .vy-explore__post-img-link img {
     transition: none;
   }
+
+  .vy-dest-slider__name {
+    font-size: var(--fs-xs);
+    padding: 14px 10px 12px;
+  }
+
+  .vy-topblogs__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .vy-topblog-card__title {
+    font-size: 0.95rem;
+    -webkit-line-clamp: 2;
+  }
+}
+
+/* ============================================================
+   06b. CRUISES COLLECTION — CSS FIX (REPLACE toàn bộ block cũ)
+ 
+   Cấu trúc đúng theo mẫu:
+   .vy-cruise-card__link
+     ├── .vy-cruise-card__img-wrap   ← ảnh phía trên
+     └── .vy-cruise-card__title      ← title bar riêng phía dưới
+ 
+   KHÔNG dùng position:absolute cho title
+   Card bo góc lớn bao cả ảnh + title bar
+   ============================================================ */
+
+.vy-cruises {
+  background: var(--color-white);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ── Section header — center ── */
+.vy-cruises__header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.vy-cruises__header .vy-label {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.vy-cruises__header .vy-section-title {
+  margin-bottom: 16px;
+}
+
+.vy-cruises__desc {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-relaxed);
+  color: var(--color-text-light);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ── Cards grid: 5 cols desktop ── */
+.vy-cruises__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+/* ── Single card ── */
+.vy-cruise-card {
+  /* width tự co theo grid */
+}
+
+.vy-cruise-card__link {
+  display: flex;
+  flex-direction: column; /* ảnh trên, title dưới */
+  text-decoration: none;
+  border-radius: 14px;
+  overflow: hidden; /* bo góc apply cho cả 2 phần */
+  background: var(--color-white);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  transition:
+    box-shadow var(--transition-base),
+    transform var(--transition-base);
+}
+
+.vy-cruise-card__link:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
+  transform: translateY(-3px);
+}
+
+/* ── Image wrapper: 400:270 = 67.5% ── */
+.vy-cruise-card__img-wrap {
+  position: relative;
+  overflow: hidden;
+  padding-top: 67.5%; /* ratio 400:270 */
+  background: var(--color-light-gray);
+  flex-shrink: 0;
+}
+
+.vy-cruise-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.vy-cruise-card__link:hover .vy-cruise-card__img {
+  transform: scale(1.06);
+}
+
+.vy-cruise-card__img-placeholder {
+  position: absolute;
+  inset: 0;
+  background: var(--color-light-gray);
+}
+
+/* ── Title bar — PHẦN RIÊNG bên dưới ảnh, không phải overlay ── */
+.vy-cruise-card__title {
+  display: block;
+  padding: 11px 12px;
+  background: var(--color-accent); /* xanh accent đặc */
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 1.3;
+  /* KHÔNG position:absolute — nằm trong flex column tự nhiên */
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.vy-cruise-card__link:hover .vy-cruise-card__title {
+  background: var(--color-accent-dark);
 }

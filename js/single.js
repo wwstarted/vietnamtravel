@@ -1,29 +1,20 @@
 /**
- * VOYA — single.js
- * Single post interactions
+ * VOYA — single.js (v2)
  *
- * 1. Reading Progress Bar
- * 2. Image Lightbox
- * 3. Share button popups
- * 4. Scroll fade-in (Intersection Observer)
- * 5. Table of Contents (TOC)
- * 6. Sidebar sticky offset
- *
- * Fix so với Wanderland:
- *  - Ionicons class → FA6 (vy-toc__arrow)
- *  - Sidebar sticky: dùng --header-height-desktop (bỏ --topbar-height)
- *  - TOC: dùng hidden attr thay vì style="display:none" để accessible hơn
- *  - Share: popup window.open thay vì href default
- *  - Lightbox: clean DOM — tạo 1 lần, reuse
+ * Thay đổi so với v1:
+ *  - Bỏ hero Ken Burns (không còn hero full-viewport)
+ *  - Sidebar sticky: do CSS xử lý, JS chỉ recalc top offset
+ *  - TOC: giữ nguyên logic, inject sau .vy-single-excerpt
+ *  - Giữ: reading progress, lightbox, share popup, fade-in
  */
 
 (function () {
   "use strict";
 
   document.addEventListener("DOMContentLoaded", function () {
-    // ══════════════════════════════════════════════════════════
-    // 1. READING PROGRESS BAR
-    // ══════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
+           1. READING PROGRESS BAR
+        ══════════════════════════════════════════════════ */
     var bar = document.createElement("div");
     bar.className = "vy-reading-progress";
     bar.setAttribute("aria-hidden", "true");
@@ -37,8 +28,7 @@
       if (!article) return;
       var top = article.getBoundingClientRect().top + window.scrollY;
       var height = article.offsetHeight;
-      var scrolled = window.scrollY - top;
-      var pct = Math.min(Math.max(scrolled / height, 0), 1);
+      var pct = Math.min(Math.max((window.scrollY - top) / height, 0), 1);
       bar.style.width = pct * 100 + "%";
     }
 
@@ -55,13 +45,12 @@
 
     updateProgress();
 
-    // ══════════════════════════════════════════════════════════
-    // 2. IMAGE LIGHTBOX
-    // ══════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
+           2. IMAGE LIGHTBOX
+        ══════════════════════════════════════════════════ */
     var contentImgs = document.querySelectorAll(".vy-single-entry img");
 
     if (contentImgs.length) {
-      // Build lightbox DOM once
       var lb = document.createElement("div");
       lb.className = "vy-lightbox";
       lb.setAttribute("role", "dialog");
@@ -69,8 +58,7 @@
       lb.setAttribute("aria-label", "Image lightbox");
       lb.innerHTML =
         '<button class="vy-lightbox__close" aria-label="Đóng">' +
-        '<i class="fa-solid fa-xmark" aria-hidden="true"></i>' +
-        "</button>" +
+        '<i class="fa-solid fa-xmark" aria-hidden="true"></i></button>' +
         '<img class="vy-lightbox__img" src="" alt="">';
       document.body.appendChild(lb);
 
@@ -84,7 +72,6 @@
         document.body.style.overflow = "hidden";
         lbClose.focus();
       }
-
       function closeLb() {
         lb.classList.remove("is-open");
         document.body.style.overflow = "";
@@ -104,17 +91,15 @@
       lb.addEventListener("click", function (e) {
         if (e.target === lb) closeLb();
       });
-
       document.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && lb.classList.contains("is-open")) closeLb();
       });
     }
 
-    // ══════════════════════════════════════════════════════════
-    // 3. SHARE BUTTON POPUPS
-    // ══════════════════════════════════════════════════════════
-    var shareBtns = document.querySelectorAll(".vy-share-btn");
-    shareBtns.forEach(function (btn) {
+    /* ══════════════════════════════════════════════════
+           3. SHARE BUTTON POPUPS
+        ══════════════════════════════════════════════════ */
+    document.querySelectorAll(".vy-share-btn").forEach(function (btn) {
       btn.addEventListener("click", function (e) {
         var href = btn.getAttribute("href");
         if (href && href.startsWith("http")) {
@@ -128,9 +113,9 @@
       });
     });
 
-    // ══════════════════════════════════════════════════════════
-    // 4. COMMENT FORM PLACEHOLDERS
-    // ══════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
+           4. COMMENT FORM PLACEHOLDERS
+        ══════════════════════════════════════════════════ */
     var placeholders = {
       "#author": "Tên *",
       "#email": "Email *",
@@ -142,27 +127,24 @@
       if (el) el.setAttribute("placeholder", placeholders[sel]);
     });
 
-    // ══════════════════════════════════════════════════════════
-    // 5. SCROLL FADE-IN (Intersection Observer)
-    // ══════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
+           5. SCROLL FADE-IN
+        ══════════════════════════════════════════════════ */
     if ("IntersectionObserver" in window) {
       var targets = document.querySelectorAll(
-        ".vy-single-entry p, " +
-          ".vy-single-entry blockquote, " +
-          ".vy-single-entry h2, " +
-          ".vy-single-entry h3, " +
+        ".vy-single-entry p, .vy-single-entry blockquote, " +
+          ".vy-single-entry h2, .vy-single-entry h3, " +
           ".vy-single-entry img, " +
-          ".vy-author-box, " +
-          ".vy-single-nav, " +
-          ".vy-related-card",
+          ".vy-author-box, .vy-single-nav, " +
+          ".vy-sidebar-post-item",
       );
 
-      var observer = new IntersectionObserver(
+      var fadeObs = new IntersectionObserver(
         function (entries) {
           entries.forEach(function (entry) {
             if (entry.isIntersecting) {
               entry.target.classList.add("vy-fade-in");
-              observer.unobserve(entry.target);
+              fadeObs.unobserve(entry.target);
             }
           });
         },
@@ -171,13 +153,14 @@
 
       targets.forEach(function (el) {
         el.classList.add("vy-will-animate");
-        observer.observe(el);
+        fadeObs.observe(el);
       });
     }
 
-    // ══════════════════════════════════════════════════════════
-    // 6. TABLE OF CONTENTS (TOC)
-    // ══════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
+           6. TABLE OF CONTENTS (TOC)
+           Inject AFTER .vy-single-excerpt (thay vì sau <p> đầu)
+        ══════════════════════════════════════════════════ */
     var tocEl = document.getElementById("vy-toc");
     var tocList = tocEl ? tocEl.querySelector(".vy-toc__list") : null;
     var tocToggle = tocEl ? tocEl.querySelector(".vy-toc__toggle") : null;
@@ -192,16 +175,15 @@
       );
 
       if (headings.length < 2) {
-        // Không đủ heading — xoá TOC
         tocEl.remove();
       } else {
-        // Build list
+        /* Build TOC items */
         headings.forEach(function (h, i) {
           if (!h.id) {
             var slug = h.textContent
               .trim()
               .toLowerCase()
-              .replace(/[^\p{L}0-9\s-]/gu, "") // Unicode-aware slug
+              .replace(/[^\p{L}0-9\s-]/gu, "")
               .replace(/\s+/g, "-")
               .replace(/-+/g, "-")
               .substring(0, 60);
@@ -239,19 +221,26 @@
           tocList.appendChild(li);
         });
 
-        // Inject after first <p>
-        var firstP = entry.querySelector("p");
-        if (firstP && firstP.nextSibling) {
-          entry.insertBefore(tocEl, firstP.nextSibling);
+        /* Inject: sau .vy-single-excerpt, nếu không có thì đầu entry */
+        var excerpt = document.querySelector(".vy-single-excerpt");
+        if (excerpt && excerpt.parentNode === article) {
+          /* TOC nằm ngoài article → move vào trước entry */
+          entry.insertBefore(tocEl, entry.firstChild);
         } else {
-          entry.prepend(tocEl);
+          /* Default: sau p đầu tiên trong entry */
+          var firstP = entry.querySelector("p");
+          if (firstP && firstP.nextSibling) {
+            entry.insertBefore(tocEl, firstP.nextSibling);
+          } else {
+            entry.prepend(tocEl);
+          }
         }
 
-        // Show TOC — remove hidden + inline style
+        /* Show */
         tocEl.removeAttribute("hidden");
         tocEl.style.display = "";
 
-        // Toggle collapse
+        /* Toggle collapse */
         function toggleToc() {
           var collapsed = tocEl.classList.toggle("is-collapsed");
           if (tocToggle)
@@ -273,7 +262,7 @@
           });
         }
 
-        // Active heading on scroll
+        /* Active heading on scroll */
         var tocLinks = Array.from(tocList.querySelectorAll("a"));
 
         function updateActiveToc() {
@@ -303,7 +292,7 @@
         window.addEventListener("scroll", updateActiveToc, { passive: true });
         updateActiveToc();
 
-        // Auto-collapse on mobile
+        /* Auto-collapse mobile */
         if (window.innerWidth <= 767) {
           tocEl.classList.add("is-collapsed");
           if (tocHead) tocHead.setAttribute("aria-expanded", "false");
@@ -311,43 +300,33 @@
       }
     }
 
-    // ══════════════════════════════════════════════════════════
-    // 7. SIDEBAR STICKY OFFSET
-    //    FIX: chỉ dùng --header-height-desktop (bỏ topbar)
-    // ══════════════════════════════════════════════════════════
-    var sidebar = document.getElementById("vy-sidebar");
-    if (sidebar && window.innerWidth > 767) {
-      var headerH = parseInt(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--header-height-desktop",
-        ) || "80",
-        10,
-      );
-      sidebar.style.top = headerH + 24 + "px";
-    }
+    /* ══════════════════════════════════════════════════
+           7. SIDEBAR STICKY — CSS xử lý chính
+           JS chỉ set top offset đúng theo header height
+        ══════════════════════════════════════════════════ */
+    var sidebarSticky = document.querySelector(".vy-single-sidebar__sticky");
 
-    // Re-calc on resize
-    window.addEventListener("resize", function () {
-      if (!sidebar) return;
+    function setSidebarTop() {
+      if (!sidebarSticky) return;
       if (window.innerWidth > 767) {
-        var hH = parseInt(
+        var headerH = parseInt(
           getComputedStyle(document.documentElement).getPropertyValue(
             "--header-height-desktop",
           ) || "80",
           10,
         );
-        sidebar.style.top = hH + 24 + "px";
+        sidebarSticky.style.top = headerH + 24 + "px";
       } else {
-        sidebar.style.top = "";
+        sidebarSticky.style.top = "";
       }
-    });
-
-    // ══════════════════════════════════════════════════════════
-    // 8. HERO LOADED ANIMATION (Ken Burns)
-    // ══════════════════════════════════════════════════════════
-    var heroEl = document.querySelector(".vy-single-hero");
-    if (heroEl) {
-      heroEl.classList.add("is-loaded");
     }
-  }); // end DOMContentLoaded
+
+    setSidebarTop();
+
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(setSidebarTop, 120);
+    });
+  }); /* end DOMContentLoaded */
 })();

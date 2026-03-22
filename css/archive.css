@@ -1,576 +1,455 @@
 /* ============================================================
-   VOYA — archive.css
-   Blog archive: editorial hero + grid + load more
-   ============================================================
+   VOYA — archive.css (v2 fixed — REPLACE TOÀN BỘ FILE CŨ)
 
-   Contents:
-   01. Main wrapper
-   02. Archive Header
-   03. Filter Bar (sticky)
-   04. Archive Body
-   05. Editorial Hero Card (1st post)
-   06. Archive Grid (3-col)
-   07. Archive Card
-   08. Load More
-   09. Empty State
-   10. JS Card Entrance Animation
-   11. Responsive — Tablet ≤ 1199px
-   12. Responsive — Mobile ≤ 767px
-   13. Responsive — Small mobile ≤ 480px
-   14. Reduced Motion
+   Fix so với v2:
+   1. Sidebar KHÔNG overlap hero:
+      - .vy-archive-body: margin-top bỏ đi
+      - .vy-archive-mcol: dùng margin-top âm để chỉ mcol overlap
+   2. Author style thay Comments style
    ============================================================ */
 
 /* ============================================================
    01. MAIN WRAPPER
    ============================================================ */
-
 .vy-archive-main {
-  background: var(--color-white);
+  background: var(--color-off-white);
   min-height: 60vh;
 }
 
 /* ============================================================
-   02. ARCHIVE HEADER
+   02. HERO BANNER
    ============================================================ */
-
-.vy-archive-header {
-  padding: 52px 0 40px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.vy-archive-header__inner {
+.vy-archive-hero-banner {
+  position: relative;
+  width: 100%;
+  height: 460px;
+  background-color: var(--color-dark);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-/* Breadcrumb */
+.vy-archive-hero-banner__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.52);
+  z-index: 1;
+}
+
+.vy-archive-hero-banner__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 var(--gutter);
+  max-width: 760px;
+}
+
+.vy-archive-hero-banner__title {
+  font-family: var(--font-script, var(--font-heading));
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  font-weight: var(--fw-semibold);
+  color: var(--color-white);
+  margin: 0 0 18px;
+  line-height: 1.2;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+  letter-spacing: 0.01em;
+}
+
 .vy-archive-breadcrumb {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 14px;
 }
 
 .vy-archive-breadcrumb a,
 .vy-archive-breadcrumb span {
   font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: var(--fw-medium);
-  letter-spacing: var(--ls-wider);
-  text-transform: uppercase;
-  color: var(--color-secondary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-light);
+  color: rgba(255, 255, 255, 0.82);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 .vy-archive-breadcrumb a:hover {
-  color: var(--color-accent);
+  color: var(--color-white);
 }
 
 .vy-archive-breadcrumb span[aria-hidden] {
-  opacity: 0.35;
-}
-
-/* Title */
-.vy-archive-header__title {
-  font-family: var(--font-heading);
-  font-size: clamp(2rem, 4vw, 3.4rem);
-  font-weight: var(--fw-light);
-  letter-spacing: var(--ls-tight);
-  color: var(--color-primary);
-  margin: 0 0 8px;
-  line-height: var(--lh-tight);
-}
-
-.vy-archive-header__desc {
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-light);
-  color: var(--color-secondary);
-  margin: 0;
-  max-width: 480px;
-  line-height: var(--lh-normal);
-}
-
-/* Post count — right side */
-.vy-archive-header__right {
-  flex-shrink: 0;
-  text-align: right;
-}
-
-.vy-archive-header__count {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-.vy-archive-header__count-num {
-  font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: var(--fw-light);
-  color: var(--color-accent);
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-
-.vy-archive-header__count-label {
-  font-family: var(--font-body);
+  opacity: 0.45;
   font-size: 10px;
-  font-weight: var(--fw-medium);
-  letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
-  color: var(--color-secondary);
 }
 
 /* ============================================================
-   03. FILTER BAR — sticky
+   03. ARCHIVE BODY + LAYOUT GRID
+
+   FIX 1: .vy-archive-body KHÔNG có margin-top âm
+   Chỉ .vy-archive-mcol mới có margin-top âm để overlap hero
+   Sidebar bắt đầu bình thường từ dưới hero
    ============================================================ */
+.vy-archive-body {
+  padding: 32px 0 80px;
+  /* KHÔNG có margin-top: -80px ở đây */
+}
 
-.vy-filter-bar {
+/* 2-col: sidebar (260px) | mcol (1fr) */
+.vy-archive-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 0 28px;
+  align-items: start;
+}
+
+/* ============================================================
+   04. SIDEBAR — bắt đầu bình thường, sticky từ top header
+   ============================================================ */
+.vy-archive-sidebar {
+  /* Bình thường, không overlap */
+}
+
+.vy-archive-sidebar__sticky {
   position: sticky;
-  top: var(--header-height-desktop, 80px);
-  z-index: calc(var(--z-header, 900) - 1);
-  background: var(--color-white);
-  border-bottom: 1px solid var(--color-border);
-  box-shadow: none;
-  transition: box-shadow var(--transition-base);
-}
-
-.vy-filter-bar.is-stuck {
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-}
-
-.vy-filter-bar__inner {
+  top: calc(var(--header-height-desktop, 80px) + 24px);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 16px;
-  min-height: 52px;
-  padding: 6px 0;
 }
 
-/* Category pills */
-.vy-filter-pills {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  flex: 1;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+/* ── Widget ── */
+.vy-archive-widget {
+  background: var(--color-white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
-.vy-filter-pills::-webkit-scrollbar {
-  display: none;
+.vy-archive-widget__title {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-primary);
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-off-white);
 }
 
-.vy-filter-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
+.vy-archive-widget__body {
+  padding: 14px 18px;
+}
+
+.vy-archive-widget__subtitle {
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: var(--fw-semibold);
   letter-spacing: var(--ls-wider);
   text-transform: uppercase;
   color: var(--color-secondary);
-  text-decoration: none;
-  white-space: nowrap;
-  border-bottom: 2px solid transparent;
-  transition:
-    color var(--transition-fast),
-    border-color var(--transition-fast);
-  flex-shrink: 0;
+  margin-bottom: 10px;
+  padding-top: 4px;
 }
 
-.vy-filter-pill:hover {
-  color: var(--color-primary);
+.vy-archive-widget__divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 14px 0;
 }
 
-.vy-filter-pill.is-active {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-accent);
+/* ============================================================
+   05. FILTER CATEGORY LINKS
+   ============================================================ */
+.vy-filter-cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.vy-filter-pill__count {
-  display: inline-flex;
+.vy-filter-cat-link {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 16px;
-  padding: 0 4px;
-  font-size: 9px;
-  font-weight: var(--fw-regular);
-  letter-spacing: 0;
-  color: var(--color-secondary);
-  background: var(--color-light-gray);
-  border-radius: var(--radius-full);
+  gap: 8px;
+  padding: 7px 10px;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-light);
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: 6px;
   transition:
     background var(--transition-fast),
     color var(--transition-fast);
 }
 
-.vy-filter-pill.is-active .vy-filter-pill__count {
+.vy-filter-cat-link:hover {
   background: var(--color-accent-pale);
   color: var(--color-accent);
 }
 
-/* Right controls */
-.vy-filter-bar__controls {
+.vy-filter-cat-link.is-active {
+  background: var(--color-accent-pale);
+  color: var(--color-accent);
+  font-weight: var(--fw-semibold);
+}
+
+.vy-filter-cat-radio {
+  font-size: 13px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+  width: 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
+  justify-content: center;
 }
 
-.vy-filter-select-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
+.vy-filter-cat-link--reset {
+  color: var(--color-text-light);
+  font-size: var(--fs-xs);
+  margin-top: 4px;
 }
 
-.vy-filter-select {
-  -webkit-appearance: none;
-  appearance: none;
-  padding: 7px 30px 7px 12px;
+.vy-filter-cat-link--reset:hover {
+  color: #d63638;
+  background: #fce8e8;
+}
+
+/* ============================================================
+   06. TAGS
+   ============================================================ */
+.vy-archive-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.vy-archive-tag {
+  display: inline-block;
+  padding: 4px 10px;
   font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--color-primary);
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
-  cursor: pointer;
-  outline: none;
-  transition:
-    border-color var(--transition-fast),
-    color var(--transition-fast);
-}
-
-.vy-filter-select:hover,
-.vy-filter-select:focus {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-
-.vy-filter-select__arrow {
-  position: absolute;
-  right: 9px;
-  font-size: 9px;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-light);
   color: var(--color-secondary);
-  pointer-events: none;
-  transition: color var(--transition-fast);
+  background: var(--color-off-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+  line-height: 1.4;
 }
 
-.vy-filter-select-wrap:hover .vy-filter-select__arrow {
+.vy-archive-tag:hover {
+  background: var(--color-accent-pale);
   color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 /* ============================================================
-   04. ARCHIVE BODY
+   07. MCOL — FIX: chỉ mcol mới overlap hero
+   margin-top âm kéo mcol lên phủ lên phần dưới hero
+   Sidebar vẫn ở vị trí bình thường
    ============================================================ */
-
-.vy-archive-body {
-  padding: 56px 0 96px;
-}
-
-/* ============================================================
-   05. EDITORIAL HERO CARD
-   ============================================================ */
-
-.vy-archive-hero {
-  position: relative;
+.vy-archive-mcol {
+  background: var(--color-white);
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  margin-bottom: 56px;
-  /* Aspect: ~21:9 wide editorial */
-  aspect-ratio: 21 / 9;
-  min-height: 380px;
-  background: var(--color-dark);
+  /* FIX: Chỉ mcol overlap lên hero */
+  margin-top: -112px;
+  position: relative;
+  z-index: 3;
 }
 
-/* Image */
-.vy-archive-hero__img-link {
+/* ============================================================
+   08. TOP BLOGS GRID (3×2)
+   ============================================================ */
+.vy-archive-topblogs {
+  padding: 32px 28px 28px;
+  background: linear-gradient(
+    135deg,
+    rgba(122, 171, 191, 0.06) 0%,
+    rgba(226, 236, 243, 0.15) 100%
+  );
+  border-bottom: 1px solid var(--color-border);
+}
+
+.vy-archive-topblogs__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  font-weight: var(--fw-light);
+  color: var(--color-primary);
+  text-align: center;
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
+}
+
+.vy-archive-topblogs__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.vy-archive-topblogs__inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.vy-archive-topblogs__img-link {
   display: block;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+.vy-archive-topblogs__img-wrap {
+  position: relative;
+  padding-top: 64.7%;
+  background: var(--color-light-gray);
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.vy-archive-topblogs__img {
   position: absolute;
   inset: 0;
-}
-
-.vy-archive-hero__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transform: scale(1.03);
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.vy-archive-hero:hover .vy-archive-hero__img {
-  transform: scale(1);
+.vy-archive-topblogs__img-link:hover .vy-archive-topblogs__img {
+  transform: scale(1.05);
 }
 
-.vy-archive-hero__img-placeholder {
-  width: 100%;
-  height: 100%;
+.vy-archive-topblogs__img-placeholder {
+  position: absolute;
+  inset: 0;
   background: var(--color-light-gray);
 }
 
-/* Overlay */
-.vy-archive-hero__overlay {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      105deg,
-      rgba(0, 0, 0, 0.76) 0%,
-      rgba(0, 0, 0, 0.4) 45%,
-      rgba(0, 0, 0, 0.1) 70%,
-      transparent 100%
-    ),
-    linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 50%);
-  z-index: 1;
-}
-
-/* Content — bottom-left */
-.vy-archive-hero__content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  z-index: 2;
-  padding: 48px 52px;
-  max-width: 620px;
-}
-
-/* Category tag */
-.vy-archive-hero__cat {
-  display: inline-block;
-  padding: 5px 13px;
-  margin-bottom: 16px;
+.vy-archive-topblogs__item-title {
   font-family: var(--font-body);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
-  color: var(--color-accent);
-  border: 1px solid rgba(184, 157, 110, 0.5);
-  text-decoration: none;
-  transition:
-    background var(--transition-fast),
-    color var(--transition-fast);
-}
-
-.vy-archive-hero__cat:hover {
-  background: var(--color-accent);
-  color: var(--color-white);
-}
-
-/* Title */
-.vy-archive-hero__title {
-  font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 3.2vw, 2.8rem);
-  font-weight: var(--fw-light);
-  line-height: var(--lh-tight);
-  color: var(--color-white);
-  margin: 0 0 14px;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
-  letter-spacing: -0.01em;
-}
-
-.vy-archive-hero__title a {
-  color: inherit;
-  text-decoration: none;
-  transition: opacity var(--transition-fast);
-}
-
-.vy-archive-hero__title a:hover {
-  opacity: 0.85;
-}
-
-/* Excerpt */
-.vy-archive-hero__excerpt {
   font-size: var(--fs-sm);
-  font-weight: var(--fw-light);
-  line-height: var(--lh-relaxed);
-  color: rgba(255, 255, 255, 0.72);
-  margin: 0 0 18px;
-  max-width: 500px;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-snug);
+  color: var(--color-primary);
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* Meta */
-.vy-archive-hero__meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-body);
-  font-size: var(--fs-sm);
+.vy-archive-topblogs__item-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.vy-archive-topblogs__item-title a:hover {
+  color: var(--color-accent);
+}
+
+/* ============================================================
+   09. LATEST ARTICLES LIST (2-col)
+   ============================================================ */
+.vy-archive-list-section {
+  padding: 28px 28px 8px;
+}
+
+.vy-archive-list-section__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
   font-weight: var(--fw-light);
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.65);
-  margin-bottom: 24px;
+  color: var(--color-primary);
+  text-align: center;
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
 }
 
-.vy-archive-hero__author {
-  color: rgba(255, 255, 255, 0.85);
-  font-style: italic;
+.vy-archive-list-section__count {
+  font-size: 0.7em;
+  font-weight: var(--fw-light);
+  color: var(--color-text-light);
+  vertical-align: middle;
 }
 
-.vy-archive-hero__dot {
-  display: inline-block;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-  flex-shrink: 0;
-}
-
-.vy-archive-hero__cta {
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  padding: 11px 26px;
-}
-
-/* ============================================================
-   06. ARCHIVE GRID — 3 columns
-   ============================================================ */
-
-.vy-archive-grid {
+.vy-archive-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 36px;
 }
 
-/* ============================================================
-   07. ARCHIVE CARD — modern minimal
-   ============================================================ */
-
-.vy-archive-card {
+.vy-archive-list-item {
   display: flex;
   flex-direction: column;
-  background: var(--color-white);
   border: 1px solid var(--color-border);
+  border-radius: 10px;
   overflow: hidden;
   transition:
     box-shadow var(--transition-base),
     transform var(--transition-base);
 }
 
-.vy-archive-card:hover {
+.vy-archive-list-item:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-3px);
 }
 
-/* Image: 4:3 ratio */
-.vy-archive-card__img-link {
+.vy-archive-list-item__img-link {
   display: block;
+  flex-shrink: 0;
+}
+
+.vy-archive-list-item__img-wrap {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
-  flex-shrink: 0;
+  padding-top: 64.7%;
   background: var(--color-light-gray);
 }
 
-.vy-archive-card__img {
+.vy-archive-list-item__img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.vy-archive-card:hover .vy-archive-card__img {
-  transform: scale(1.05);
+.vy-archive-list-item:hover .vy-archive-list-item__img {
+  transform: scale(1.04);
 }
 
-.vy-archive-card__img-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    135deg,
-    var(--color-light-gray) 0%,
-    var(--color-mid-gray) 100%
-  );
-}
-
-/* Category badge on image */
-.vy-archive-card__cat {
+.vy-archive-list-item__img-placeholder {
   position: absolute;
-  top: 0;
-  left: 0;
-  padding: 5px 12px;
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--ls-wider);
-  text-transform: uppercase;
-  color: var(--color-primary);
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(4px);
-  transition:
-    background var(--transition-fast),
-    color var(--transition-fast);
+  inset: 0;
+  background: var(--color-light-gray);
 }
 
-.vy-archive-card:hover .vy-archive-card__cat {
-  background: var(--color-accent);
-  color: var(--color-white);
-}
-
-/* Body */
-.vy-archive-card__body {
+.vy-archive-list-item__ct {
+  padding: 16px 16px 18px;
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 20px 20px 22px;
 }
 
-/* Meta */
-.vy-archive-card__meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: var(--fw-light);
-  font-style: italic;
-  color: var(--color-secondary);
-}
-
-.vy-archive-card__author {
-  color: var(--color-secondary);
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-.vy-archive-card__author:hover {
-  color: var(--color-accent);
-}
-
-.vy-archive-card__comments {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-}
-
-.vy-archive-card__comments i {
-  font-size: 9px;
-  opacity: 0.65;
-}
-
-/* Title */
-.vy-archive-card__title {
+.vy-archive-list-item__title {
   font-family: var(--font-heading);
-  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
   font-weight: var(--fw-light);
   line-height: var(--lh-snug);
   color: var(--color-primary);
@@ -582,22 +461,81 @@
   overflow: hidden;
 }
 
-.vy-archive-card__title a {
+.vy-archive-list-item__title a {
   color: inherit;
   text-decoration: none;
   transition: color var(--transition-fast);
 }
-.vy-archive-card__title a:hover {
+
+.vy-archive-list-item__title a:hover {
   color: var(--color-accent);
 }
 
-/* Excerpt */
-.vy-archive-card__excerpt {
+.vy-archive-list-item__btm {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.vy-archive-list-item__params {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+/* Date */
+.vy-archive-list-item__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: var(--fw-light);
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.vy-archive-list-item__date i {
+  font-size: 10px;
+  color: var(--color-accent);
+}
+
+/* FIX 2: Author style */
+.vy-archive-list-item__author {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: var(--fw-light);
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.vy-archive-list-item__author i {
+  font-size: 10px;
+  color: var(--color-accent);
+}
+
+.vy-archive-list-item__author a {
+  color: var(--color-text-light);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.vy-archive-list-item__author a:hover {
+  color: var(--color-accent);
+}
+
+/* Description */
+.vy-archive-list-item__desc {
   font-size: var(--fs-sm);
-  font-weight: var(--fw-regular);
-  line-height: var(--lh-normal);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-relaxed);
   color: var(--color-secondary);
-  margin: 0 0 16px;
+  margin: 0;
   flex: 1;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -605,152 +543,81 @@
   overflow: hidden;
 }
 
-/* Read More */
-.vy-archive-card__more {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
-  color: var(--color-primary);
-  text-decoration: none;
-  align-self: flex-start;
-  margin-top: auto;
-  transition:
-    color var(--transition-fast),
-    gap var(--transition-fast);
-}
-
-.vy-archive-card__more:hover {
-  color: var(--color-accent);
-  gap: 11px;
-}
-
-.vy-archive-card__more i {
-  font-size: 10px;
-  transition: transform var(--transition-fast);
-}
-.vy-archive-card__more:hover i {
-  transform: translateX(3px);
-}
-
 /* ============================================================
-   08. LOAD MORE
+   10. PAGINATION
    ============================================================ */
-
-.vy-load-more-wrap {
+.vy-archive-pagination {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  padding: 8px 28px 32px;
+}
+
+.vy-archive-pagination__list {
+  display: flex;
   align-items: center;
-  gap: 16px;
-  margin-top: 56px;
-}
-
-/* Progress bar */
-.vy-load-more-progress {
-  width: 100%;
-  max-width: 400px;
-  height: 2px;
-  background: var(--color-border);
-  overflow: hidden;
-}
-
-.vy-load-more-progress__bar {
-  height: 100%;
-  background: var(--color-accent);
-  transition: width var(--transition-slow);
-}
-
-/* Count text */
-.vy-load-more-count {
-  font-family: var(--font-body);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-light);
-  color: var(--color-secondary);
+  gap: 4px;
+  list-style: none;
   margin: 0;
-  text-align: center;
+  padding: 0;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.vy-load-more-count strong {
-  font-weight: var(--fw-semibold);
-  color: var(--color-primary);
-}
-
-/* Load more button */
-.vy-load-more-btn {
-  position: relative;
+.vy-archive-pagination__list .page-numbers {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 14px 40px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
   font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
-  color: var(--color-primary);
-  background: transparent;
-  border: 1px solid var(--color-primary);
-  cursor: pointer;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-secondary);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  text-decoration: none;
   transition:
-    background var(--transition-base),
-    color var(--transition-base),
-    transform var(--transition-fast);
-  min-width: 220px;
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
-.vy-load-more-btn:hover {
-  background: var(--color-primary);
+.vy-archive-pagination__list .page-numbers:hover {
+  background: var(--color-accent-pale);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.vy-archive-pagination__list .page-numbers.current {
+  background: var(--color-accent);
   color: var(--color-white);
-  transform: translateY(-2px);
-}
-
-.vy-load-more-btn:disabled {
-  opacity: 0.4;
-  cursor: default;
+  border-color: var(--color-accent);
   pointer-events: none;
 }
 
-/* Loading state */
-.vy-load-more-btn__spinner {
-  display: none;
-}
-
-.vy-load-more-btn.is-loading .vy-load-more-btn__text {
-  opacity: 0;
-}
-.vy-load-more-btn.is-loading .vy-load-more-btn__spinner {
-  display: flex;
-  position: absolute;
-  color: inherit;
-}
-
-/* All loaded state */
-.vy-load-more-btn.is-done {
-  opacity: 0.4;
+.vy-archive-pagination__list .page-numbers.dots {
+  background: transparent;
+  border-color: transparent;
   pointer-events: none;
-  cursor: default;
+  color: var(--color-text-light);
 }
 
 /* ============================================================
-   09. EMPTY STATE
+   11. EMPTY STATE
    ============================================================ */
-
 .vy-archive-empty {
   text-align: center;
-  padding: 80px 20px;
-  max-width: 380px;
+  padding: 64px 20px;
+  max-width: 360px;
   margin: 0 auto;
 }
 
 .vy-archive-empty__icon {
-  font-size: 56px;
+  font-size: 52px;
   color: var(--color-mid-gray);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   line-height: 1;
 }
 
@@ -759,222 +626,177 @@
   font-size: var(--fs-2xl);
   font-weight: var(--fw-light);
   color: var(--color-primary);
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 }
 
 .vy-archive-empty__text {
   font-size: var(--fs-sm);
   font-weight: var(--fw-light);
   color: var(--color-secondary);
-  margin: 0 0 32px;
+  margin: 0 0 28px;
   line-height: var(--lh-relaxed);
 }
 
 /* ============================================================
-   10. JS CARD ENTRANCE ANIMATION
+   12. RESPONSIVE — TABLET ≤ 1199px
    ============================================================ */
-
-.vy-card-hidden {
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.vy-card-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* AJAX loading overlay */
-.vy-posts-wrap {
-  position: relative;
-  min-height: 200px;
-}
-
-/* ============================================================
-   11. RESPONSIVE — TABLET ≤ 1199px
-   ============================================================ */
-
 @media (max-width: 1199px) {
-  .vy-archive-header {
-    padding: 40px 0 32px;
-  }
-
-  .vy-archive-hero {
-    aspect-ratio: 16 / 7;
-    min-height: 300px;
-  }
-
-  .vy-archive-hero__content {
-    padding: 36px 40px;
-    max-width: 520px;
-  }
-
-  .vy-archive-hero__excerpt {
-    display: none;
-  }
-
-  .vy-archive-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+  .vy-archive-hero-banner {
+    height: 380px;
   }
 
   .vy-archive-body {
-    padding: 44px 0 72px;
+    padding: 28px 0 60px;
   }
 
-  .vy-filter-bar {
-    top: var(--header-height-mobile, 64px);
-  }
-}
-
-/* ============================================================
-   12. RESPONSIVE — MOBILE ≤ 767px
-   ============================================================ */
-
-@media (max-width: 767px) {
-  /* Header */
-  .vy-archive-header {
-    padding: 28px 0 24px;
+  .vy-archive-layout {
+    grid-template-columns: 220px 1fr;
+    gap: 0 20px;
   }
 
-  .vy-archive-header__inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+  .vy-archive-mcol {
+    margin-top: -90px;
   }
 
-  .vy-archive-header__right {
-    align-self: flex-start;
+  .vy-archive-sidebar__sticky {
+    top: calc(var(--header-height-mobile, 64px) + 16px);
   }
 
-  .vy-archive-header__count {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 8px;
+  .vy-archive-topblogs {
+    padding: 24px 20px 20px;
   }
-
-  .vy-archive-header__title {
-    font-size: clamp(1.8rem, 6vw, 2.4rem);
-  }
-
-  /* Filter bar — 2 dòng stacked, full-width căn đều */
-  .vy-filter-bar__inner {
-    flex-direction: column;
-    align-items: stretch; /* ← full width, không left-align */
-    gap: 0;
-    padding: 0;
-    min-height: auto;
-  }
-
-  /* Pills: full width, horizontal scroll */
-  .vy-filter-pills {
-    width: 100%;
-    border-bottom: 1px solid var(--color-border);
-    padding: 4px 0;
-  }
-
-  /* Controls: full width, căn phải */
-  .vy-filter-bar__controls {
-    width: 100%;
-    justify-content: flex-end;
-    padding: 8px 0;
-    gap: 8px;
-  }
-
-  /* Hero: fixed height, không aspect-ratio */
-  .vy-archive-hero {
-    aspect-ratio: unset;
-    height: 320px;
-    min-height: 0;
-    margin-bottom: 32px;
-  }
-
-  .vy-archive-hero__content {
-    padding: 20px var(--gutter, 20px) 24px;
-    max-width: 100%;
-  }
-
-  .vy-archive-hero__title {
-    font-size: clamp(1.3rem, 5vw, 1.8rem);
-    margin-bottom: 10px;
-  }
-  .vy-archive-hero__excerpt {
-    display: none;
-  }
-  .vy-archive-hero__meta {
-    margin-bottom: 18px;
-  }
-  .vy-archive-hero__cta {
-    padding: 9px 20px;
-    font-size: 9px;
-  }
-
-  /* Grid */
-  .vy-archive-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  /* Load more */
-  .vy-load-more-wrap {
-    margin-top: 40px;
+  .vy-archive-topblogs__grid {
     gap: 12px;
   }
+  .vy-archive-list-section {
+    padding: 20px 20px 8px;
+  }
+  .vy-archive-list {
+    gap: 16px;
+  }
+}
 
-  /* Archive body */
+/* ============================================================
+   13. RESPONSIVE — MOBILE ≤ 767px
+   ============================================================ */
+@media (max-width: 767px) {
+  .vy-archive-hero-banner {
+    height: 280px;
+  }
+
+  .vy-archive-hero-banner__title {
+    font-size: clamp(1.8rem, 7vw, 2.8rem);
+    margin-bottom: 12px;
+  }
+
+  /* 1 col trên mobile: sidebar trên, mcol dưới */
   .vy-archive-body {
-    padding: 28px 0 56px;
+    padding: 20px 0 48px;
+  }
+
+  .vy-archive-layout {
+    grid-template-columns: 1fr;
+    gap: 16px 0;
+  }
+
+  /* mcol KHÔNG overlap trên mobile — sidebar phải show trước */
+  .vy-archive-mcol {
+    margin-top: 0;
+    border-radius: 12px;
+  }
+
+  .vy-archive-sidebar__sticky {
+    position: static;
+  }
+
+  .vy-archive-topblogs {
+    padding: 20px 16px 16px;
+  }
+  .vy-archive-topblogs__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  /* Ẩn 2 item cuối để gọn trên mobile */
+  .vy-archive-topblogs__item:nth-child(n + 5) {
+    display: none;
+  }
+
+  .vy-archive-list-section {
+    padding: 16px 16px 8px;
+  }
+  .vy-archive-list {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .vy-archive-pagination {
+    padding: 8px 16px 24px;
+  }
+  .vy-archive-pagination__list .page-numbers {
+    min-width: 32px;
+    height: 32px;
+    font-size: 11px;
   }
 }
 
 /* ============================================================
-   13. RESPONSIVE — SMALL MOBILE ≤ 480px
+   14. RESPONSIVE — SMALL MOBILE ≤ 480px
    ============================================================ */
-
 @media (max-width: 480px) {
-  .vy-archive-hero {
-    height: 260px;
+  .vy-archive-hero-banner {
+    height: 220px;
   }
-  .vy-archive-hero__content {
-    padding: 16px var(--gutter, 16px) 20px;
+  .vy-archive-hero-banner__title {
+    font-size: 1.7rem;
   }
-  .vy-archive-hero__title {
-    font-size: 1.2rem;
+
+  .vy-archive-topblogs__grid {
+    grid-template-columns: 1fr;
   }
-  .vy-archive-hero__meta {
-    font-size: 10px;
+  .vy-archive-topblogs__item:nth-child(n + 5) {
+    display: flex;
   }
-  .vy-filter-select {
-    font-size: 9px;
-    padding: 6px 22px 6px 10px;
+  .vy-archive-topblogs__item:nth-child(n + 4) {
+    display: none;
   }
-  .vy-load-more-btn {
-    min-width: 180px;
-    padding: 12px 24px;
+
+  .vy-archive-list-item__desc {
+    -webkit-line-clamp: 2;
   }
 }
 
 /* ============================================================
-   14. REDUCED MOTION
+   15. REDUCED MOTION
    ============================================================ */
-
 @media (prefers-reduced-motion: reduce) {
-  .vy-card-hidden {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
-  .vy-archive-hero__img,
-  .vy-archive-card__img {
+  .vy-archive-topblogs__img,
+  .vy-archive-list-item__img {
     transition: none;
     transform: none !important;
   }
-
-  .vy-load-more-progress__bar {
+  .vy-archive-list-item {
     transition: none;
   }
+}
+
+.vy-archive-layout {
+  align-items: start; /* ← key: sidebar không stretch full height */
+}
+
+/*
+   Sidebar sticky đã có trong .vy-archive-sidebar__sticky,
+   nhưng cần đảm bảo .vy-archive-body không có overflow:hidden
+   (overflow hidden trên parent sẽ break position:sticky)
+*/
+.vy-archive-body {
+  overflow: visible; /* đảm bảo sticky hoạt động */
+}
+
+/* Active tag trong widget Tags */
+.vy-archive-tag.is-active {
+  background: var(--color-accent-pale);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  font-weight: var(--fw-semibold);
 }
