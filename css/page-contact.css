@@ -1,0 +1,537 @@
+/* ============================================================
+   VOYA — page-contact.css
+   Contact page: hero (reuse page-cms) + info sidebar + form
+   ============================================================
+
+   Contents:
+   01. Contact Body Layout (2-col grid)
+   02. Info Sidebar (title, cards, social, map)
+   03. Contact Form (fields, states, submit)
+   04. Form Notice (success / error)
+   05. Responsive — Tablet ≤ 1199px
+   06. Responsive — Mobile ≤ 767px
+   07. Responsive — Small mobile ≤ 480px
+   ============================================================
+
+   Note: Hero styles inherit từ page-cms.css
+         (.vy-cms-hero, .vy-cms-hero__img, v.v.)
+   ============================================================ */
+
+/* ============================================================
+   01. CONTACT BODY LAYOUT
+   ============================================================ */
+
+.vy-contact-body {
+  background: var(--color-white);
+  padding: 80px 0 100px;
+}
+
+.vy-contact-container {
+  max-width: var(--container-max, 1160px);
+  margin: 0 auto;
+  padding: 0 var(--gutter, 40px);
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 0 72px;
+  align-items: start;
+}
+
+/* ============================================================
+   02. INFO SIDEBAR
+   ============================================================ */
+
+.vy-contact-info {
+  position: sticky;
+  top: calc(var(--header-height-desktop, 80px) + 24px);
+}
+
+/* Label + Title */
+.vy-contact-info .vy-label {
+  margin-bottom: 10px;
+}
+
+.vy-contact-info__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-snug);
+  letter-spacing: -0.01em;
+  color: var(--color-primary);
+  margin: 0 0 16px;
+}
+
+.vy-contact-info__title em {
+  font-style: italic;
+}
+
+.vy-contact-info__desc {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-relaxed);
+  color: var(--color-secondary);
+  margin: 0 0 36px;
+}
+
+/* ── Info Cards ── */
+.vy-contact-cards {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+}
+
+.vy-contact-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.vy-contact-card:first-child {
+  border-top: 1px solid var(--color-border);
+}
+
+/* Icon circle */
+.vy-contact-card__icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent-pale);
+  color: var(--color-accent);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Text block */
+.vy-contact-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 2px;
+}
+
+.vy-contact-card__label {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.vy-contact-card__value {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+  color: var(--color-primary);
+}
+
+.vy-contact-card__link {
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.vy-contact-card__link:hover {
+  color: var(--color-accent);
+}
+
+/* ── Social links ── */
+.vy-contact-social {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.vy-contact-social__label {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  margin-right: 4px;
+}
+
+.vy-contact-social__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  color: var(--color-secondary);
+  font-size: 15px;
+  text-decoration: none;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.vy-contact-social__link:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+/* ── Map embed ── */
+.vy-contact-map {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.vy-contact-map iframe {
+  display: block;
+  width: 100%;
+  height: 220px;
+}
+
+/* ============================================================
+   03. CONTACT FORM
+   ============================================================ */
+
+/* Title */
+.vy-contact-form__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-snug);
+  letter-spacing: -0.01em;
+  color: var(--color-primary);
+  margin: 0 0 36px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.vy-contact-form__title em {
+  font-style: italic;
+}
+
+/* ── Form notice moved to section 04 ── */
+
+/* Form rows */
+.vy-cf-row {
+  margin-bottom: 20px;
+}
+
+.vy-cf-row--2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.vy-cf-row--submit {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+/* Field */
+.vy-cf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Label */
+.vy-cf-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.vy-cf-required {
+  color: var(--color-accent);
+  margin-left: 2px;
+}
+
+/* Inputs */
+.vy-cf-input,
+.vy-cf-textarea {
+  width: 100%;
+  padding: 13px 16px;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
+  color: var(--color-primary);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  outline: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.vy-cf-input::placeholder,
+.vy-cf-textarea::placeholder {
+  font-family: var(--font-heading);
+  font-style: italic;
+  color: var(--color-mid-gray);
+  font-size: 15px;
+}
+
+.vy-cf-input:focus,
+.vy-cf-textarea:focus {
+  border-color: var(--color-accent);
+  background: #fdfcfb;
+  box-shadow: 0 0 0 3px rgba(184, 157, 110, 0.1);
+}
+
+/* Validation states */
+.vy-cf-input.is-invalid,
+.vy-cf-textarea.is-invalid {
+  border-color: #e05252;
+  box-shadow: 0 0 0 3px rgba(224, 82, 82, 0.08);
+}
+
+.vy-cf-input.is-valid,
+.vy-cf-textarea.is-valid {
+  border-color: #59815b;
+}
+
+.vy-cf-textarea {
+  resize: vertical;
+  min-height: 160px;
+}
+
+/* Submit button */
+.vy-cf-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 36px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-white);
+  background: var(--color-primary);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    background var(--transition-base),
+    transform var(--transition-fast),
+    gap var(--transition-fast);
+}
+
+/* Accent fill on hover */
+.vy-cf-submit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+
+.vy-cf-submit:hover::before {
+  transform: scaleX(1);
+}
+.vy-cf-submit:hover {
+  gap: 18px;
+}
+.vy-cf-submit:active {
+  transform: translateY(1px);
+}
+
+.vy-cf-submit__text,
+.vy-cf-submit__icon {
+  position: relative;
+  z-index: 1;
+}
+
+.vy-cf-submit__icon {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* Normal: show arrow, hide spinner */
+.vy-cf-submit__arrow {
+  display: inline-block;
+  transition: transform var(--transition-fast);
+}
+.vy-cf-submit__spinner {
+  display: none;
+}
+
+.vy-cf-submit:hover .vy-cf-submit__arrow {
+  transform: translateX(3px);
+}
+
+/* Loading state */
+.vy-cf-submit.is-loading {
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+.vy-cf-submit.is-loading .vy-cf-submit__arrow {
+  display: none;
+}
+.vy-cf-submit.is-loading .vy-cf-submit__spinner {
+  display: inline-block;
+}
+
+/* Required note */
+.vy-cf-required-note {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-light);
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+/* ============================================================
+   04. FORM NOTICES (Success / Error)
+   ============================================================ */
+
+.vy-form-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  border-left: 3px solid transparent;
+}
+
+.vy-form-notice i {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.vy-form-notice p {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+  margin: 0;
+}
+
+/* Success */
+.vy-form-notice--success {
+  background: #f0f7f0;
+  border-color: #59815b;
+}
+
+.vy-form-notice--success i {
+  color: #59815b;
+}
+.vy-form-notice--success p {
+  color: #2c5a2c;
+}
+
+/* Error */
+.vy-form-notice--error {
+  background: #fdf0f0;
+  border-color: #e05252;
+}
+
+.vy-form-notice--error i {
+  color: #e05252;
+}
+.vy-form-notice--error p {
+  color: #8c2020;
+}
+
+/* ============================================================
+   05. RESPONSIVE — TABLET ≤ 1199px
+   ============================================================ */
+
+@media (max-width: 1199px) {
+  .vy-contact-body {
+    padding: 64px 0 80px;
+  }
+
+  .vy-contact-container {
+    grid-template-columns: 300px 1fr;
+    gap: 0 48px;
+  }
+}
+
+/* ============================================================
+   06. RESPONSIVE — MOBILE ≤ 767px
+   ============================================================ */
+
+@media (max-width: 767px) {
+  .vy-contact-body {
+    padding: 40px 0 60px;
+  }
+
+  /* Stack: form trên, info dưới */
+  .vy-contact-container {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .vy-contact-info {
+    position: static;
+    order: 2;
+    margin-top: 48px;
+    padding-top: 40px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .vy-contact-form-wrap {
+    order: 1;
+  }
+
+  /* 2-col row → 1-col */
+  .vy-cf-row--2 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Submit row: stack */
+  .vy-cf-row--submit {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .vy-cf-submit {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   07. RESPONSIVE — SMALL MOBILE ≤ 480px
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .vy-contact-info__title,
+  .vy-contact-form__title {
+    font-size: 1.5rem;
+  }
+
+  .vy-contact-map iframe {
+    height: 180px;
+  }
+
+  .vy-cf-input,
+  .vy-cf-textarea {
+    padding: 11px 14px;
+  }
+}

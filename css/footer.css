@@ -1,0 +1,637 @@
+/* ============================================================
+   VOYA — footer.css
+   Modern & Minimal | Dark footer
+   ============================================================ */
+
+/* ── Footer design tokens ───────────────────────────────────── */
+:root {
+  --vy-ft-bg: #252523;
+  --vy-ft-bg-mid: #202020;
+  --vy-ft-bg-bot: #1a1a18;
+  --vy-ft-text: #b8b5ac;
+  --vy-ft-muted: #6e6b64;
+  --vy-ft-heading: #ffffff;
+  --vy-ft-accent: var(--color-accent, #b89d6e);
+  --vy-ft-accent-h: var(--color-accent-dark, #9a8258);
+  --vy-ft-border: rgba(255, 255, 255, 0.07);
+  --vy-ft-input-bd: rgba(255, 255, 255, 0.16);
+  --vy-ft-gap: 40px;
+}
+
+/* ============================================================
+   1. FOOTER BASE
+   ============================================================ */
+.vy-footer {
+  width: 100%;
+  background: var(--vy-ft-bg);
+  color: var(--vy-ft-text);
+  font-family: var(--font-body);
+}
+
+/* ============================================================
+   2. FOOTER TOP — Logo + Bio
+   ============================================================ */
+.vy-footer__top {
+  padding: 56px 0 44px;
+  border-bottom: 1px solid var(--vy-ft-border);
+}
+
+.vy-footer__top-inner {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+/* Brand / Logo */
+.vy-footer__brand {
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.vy-footer__logo-link {
+  display: inline-block;
+}
+
+.vy-footer__logo {
+  height: 52px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+}
+
+.vy-footer__logo-text {
+  font-family: var(--font-heading);
+  font-size: var(--fs-2xl, 32px);
+  font-weight: var(--fw-light, 300);
+  color: var(--vy-ft-heading);
+  letter-spacing: var(--ls-tight);
+  white-space: nowrap;
+}
+
+/* Vertical divider between logo and bio */
+.vy-footer__top-inner::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 56px;
+  background: var(--vy-ft-border);
+  flex-shrink: 0;
+}
+
+/* Bio */
+.vy-footer__bio {
+  flex: 1;
+}
+
+.vy-footer__bio-text {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: var(--fw-light, 300);
+  line-height: 1.5;
+  color: var(--vy-ft-text);
+  max-width: 780px;
+}
+
+.vy-footer__bio-text .vy-footer-highlight {
+  color: var(--vy-ft-accent);
+  position: relative;
+  padding: 0 6px;
+}
+
+.vy-footer__bio-text .vy-footer-highlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(184, 157, 110, 0.12);
+  border-radius: 2px;
+}
+
+/* ============================================================
+   3. FOOTER MIDDLE — 4-col grid
+   ============================================================ */
+.vy-footer__middle {
+  background: var(--vy-ft-bg-mid);
+  padding: 56px 0 48px;
+  border-bottom: 1px solid var(--vy-ft-border);
+}
+
+.vy-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--vy-ft-gap);
+}
+
+/* Widget base */
+.vy-footer-widget {
+  height: 100%;
+}
+
+.vy-footer-widget__title {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold, 600);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vy-ft-heading);
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--vy-ft-border);
+}
+
+.vy-footer-widget__text {
+  font-size: var(--fs-sm, 13px);
+  font-weight: var(--fw-light, 300);
+  line-height: var(--lh-relaxed, 1.88);
+  color: var(--vy-ft-text);
+}
+
+.vy-footer-widget__sub {
+  font-size: var(--fs-sm, 13px);
+  font-weight: var(--fw-light, 300);
+  line-height: 1.6;
+  color: var(--vy-ft-muted);
+  margin-bottom: 20px;
+}
+
+/* ── Newsletter Form ─────────────────────────────────────────── */
+.vy-footer-newsletter__fields {
+  margin-bottom: 20px;
+}
+
+.vy-footer-newsletter__field {
+  border-bottom: 1px solid var(--vy-ft-input-bd);
+  transition: border-color var(--transition-fast);
+}
+
+.vy-footer-newsletter__field:focus-within {
+  border-bottom-color: var(--vy-ft-accent);
+}
+
+.vy-footer-newsletter__input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 13px 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm, 13px);
+  font-weight: var(--fw-light, 300);
+  color: var(--vy-ft-heading);
+  transition: color var(--transition-fast);
+}
+
+.vy-footer-newsletter__input::placeholder {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--vy-ft-muted);
+}
+
+.vy-footer-newsletter__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold, 600);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vy-ft-heading);
+  padding: 0;
+  transition:
+    color var(--transition-fast),
+    gap var(--transition-fast);
+}
+
+.vy-footer-newsletter__btn:hover {
+  color: var(--vy-ft-accent);
+  gap: 14px;
+}
+
+.vy-footer-newsletter__btn i {
+  font-size: 13px;
+  transition: transform var(--transition-fast);
+}
+
+.vy-footer-newsletter__btn:hover i {
+  transform: translate(2px, -2px);
+}
+
+/* ── Recent Posts ────────────────────────────────────────────── */
+.vy-footer-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.vy-footer-post {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--vy-ft-border);
+}
+
+.vy-footer-post:first-child {
+  padding-top: 0;
+}
+
+.vy-footer-post:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.vy-footer-post__date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.vy-footer-post__date i {
+  font-size: 11px;
+  color: var(--vy-ft-accent);
+  flex-shrink: 0;
+}
+
+.vy-footer-post__date a {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--vy-ft-accent);
+  transition: color var(--transition-fast);
+}
+
+.vy-footer-post__date a:hover {
+  color: var(--vy-ft-accent-h);
+}
+
+.vy-footer-post__title {
+  margin: 0;
+}
+
+.vy-footer-post__title a {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm, 13px);
+  font-weight: var(--fw-light, 300);
+  color: var(--vy-ft-heading);
+  line-height: 1.5;
+  transition: color var(--transition-fast);
+}
+
+.vy-footer-post__title a:hover {
+  color: var(--vy-ft-accent);
+}
+
+/* ── Categories List ─────────────────────────────────────────── */
+.vy-footer-cats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vy-footer-cats li {
+  border-bottom: 1px solid var(--vy-ft-border);
+}
+
+.vy-footer-cats li:last-child {
+  border-bottom: none;
+}
+
+.vy-footer-cats li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  font-size: var(--fs-sm, 13px);
+  font-weight: var(--fw-light, 300);
+  color: var(--vy-ft-text);
+  text-decoration: none;
+  transition:
+    color var(--transition-fast),
+    padding-left var(--transition-fast);
+}
+
+.vy-footer-cats li a::before {
+  content: "—";
+  font-size: 10px;
+  color: var(--vy-ft-accent);
+  flex-shrink: 0;
+}
+
+.vy-footer-cats li a:hover {
+  color: var(--vy-ft-heading);
+  padding-left: 6px;
+}
+
+/* WP category count */
+.vy-footer-cats li a .cat-item-count,
+.vy-footer-cats .cat-item a + span {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--vy-ft-muted);
+}
+
+/* ============================================================
+   4. FOOTER BOTTOM — Social + Copyright
+   ============================================================ */
+.vy-footer__bottom {
+  background: var(--vy-ft-bg-bot);
+  padding: 20px 0;
+}
+
+.vy-footer__bottom-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* Social icons */
+.vy-footer__socials {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.vy-footer__socials-label {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--vy-ft-muted);
+  margin-right: 4px;
+}
+
+.vy-footer__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+  color: var(--vy-ft-muted);
+  text-decoration: none;
+  transition:
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.vy-footer__social-link:hover {
+  color: var(--vy-ft-heading);
+  transform: translateY(-2px);
+}
+
+/* Copyright */
+.vy-footer__copyright {
+  font-size: var(--fs-sm, 13px);
+  font-weight: var(--fw-light, 300);
+  color: var(--vy-ft-muted);
+  line-height: 1;
+}
+
+.vy-footer__copyright a {
+  color: var(--vy-ft-heading);
+  font-weight: var(--fw-medium, 500);
+  transition: color var(--transition-fast);
+}
+
+.vy-footer__copyright a:hover {
+  color: var(--vy-ft-accent);
+}
+
+/* ============================================================
+   5. BACK TO TOP BUTTON
+   ============================================================ */
+#vy-back-to-top {
+  position: fixed;
+  bottom: 36px;
+  right: 36px;
+  width: 46px;
+  height: 46px;
+  background: var(--vy-ft-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: calc(var(--z-header, 900) - 1);
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 3px;
+  text-decoration: none;
+
+  /* Hidden by default */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px);
+  transition:
+    opacity var(--transition-base),
+    visibility 0s linear 0.26s,
+    transform var(--transition-base),
+    background-color var(--transition-fast);
+}
+
+#vy-back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity var(--transition-base),
+    visibility 0s linear 0s,
+    transform var(--transition-base),
+    background-color var(--transition-fast);
+}
+
+#vy-back-to-top:hover {
+  background: var(--vy-ft-accent-h);
+}
+
+/* Arrow icon stack */
+.vy-btt__stack {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.vy-btt__arrow {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: var(--color-white);
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    transform 0.26s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.26s ease;
+}
+
+.vy-btt__arrow--primary {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.vy-btt__arrow--hover {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+#vy-back-to-top:hover .vy-btt__arrow--primary {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+#vy-back-to-top:hover .vy-btt__arrow--hover {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ============================================================
+   6. RESPONSIVE
+   ============================================================ */
+
+/* Large tablet (≤ 1199px) */
+@media (max-width: 1199px) {
+  .vy-footer__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px;
+  }
+
+  .vy-footer__top-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+  }
+
+  .vy-footer__top-inner::after {
+    display: none; /* hide vertical divider */
+  }
+
+  .vy-footer__bio-text {
+    font-size: 20px;
+  }
+}
+
+/* Tablet (≤ 991px) */
+@media (max-width: 991px) {
+  :root {
+    --vy-ft-gap: 28px;
+  }
+
+  .vy-footer__top {
+    padding: 44px 0 36px;
+  }
+  .vy-footer__middle {
+    padding: 44px 0 36px;
+  }
+
+  .vy-footer__bottom-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .vy-footer__copyright {
+    order: -1; /* copyright on top on tablet */
+  }
+
+  #vy-back-to-top {
+    bottom: 24px;
+    right: 20px;
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* Mobile (≤ 767px) */
+@media (max-width: 767px) {
+  :root {
+    --vy-ft-gap: 24px;
+  }
+
+  .vy-footer__top {
+    padding: 36px 0 28px;
+  }
+  .vy-footer__middle {
+    padding: 36px 0 28px;
+  }
+  .vy-footer__bottom {
+    padding: 18px 0;
+  }
+
+  .vy-footer__grid {
+    grid-template-columns: 1fr; /* single column on mobile */
+    gap: 32px;
+  }
+
+  .vy-footer__logo {
+    height: 40px;
+  }
+
+  .vy-footer__bio-text {
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  .vy-footer-widget__title {
+    margin-bottom: 16px;
+  }
+
+  #vy-back-to-top {
+    bottom: 20px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .vy-btt__arrow {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+/* Small mobile (≤ 480px) */
+@media (max-width: 480px) {
+  .vy-footer__socials {
+    gap: 10px;
+  }
+
+  .vy-footer-newsletter__btn {
+    font-size: 9px;
+  }
+
+  .vy-footer__bottom-inner {
+    gap: 12px;
+  }
+}
+
+/* ============================================================
+   7. WIDGET OVERRIDES — khi dùng WordPress widget thực
+   ============================================================ */
+
+/* Widget title từ WP widget areas */
+.vy-footer-widget .vy-footer-widget-title,
+.vy-footer-widget .widget-title {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold, 600);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vy-ft-heading);
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--vy-ft-border);
+}
+
+/* Footer widget wrapper */
+.vy-footer-widget.widget {
+  margin-bottom: 0;
+}

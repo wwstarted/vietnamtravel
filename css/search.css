@@ -1,0 +1,565 @@
+/* ============================================================
+   VOYA — search.css
+   Search results page
+   Tái dụng: .vy-archive-card, .vy-archive-grid từ archive.css
+   ============================================================
+
+   Contents:
+   01. Main wrapper
+   02. Search Header
+   03. Inline Search Form
+   04. Results body
+   05. Empty / No results state
+   06. Suggestions + Category pills
+   07. Pagination (tái dụng archive pagination)
+   08. Responsive — Tablet ≤ 1199px
+   09. Responsive — Mobile ≤ 767px
+   10. Responsive — Small mobile ≤ 480px
+   11. Reduced Motion
+   ============================================================ */
+
+/* ============================================================
+   01. MAIN WRAPPER
+   ============================================================ */
+
+.vy-search-main {
+  background: var(--color-white);
+  min-height: 60vh;
+}
+
+/* ============================================================
+   02. SEARCH HEADER
+   ============================================================ */
+
+.vy-search-header {
+  padding: 52px 0 44px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+/* Breadcrumb */
+.vy-search-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.vy-search-breadcrumb a,
+.vy-search-breadcrumb span {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.vy-search-breadcrumb a:hover {
+  color: var(--color-accent);
+}
+
+.vy-search-breadcrumb span[aria-hidden] {
+  opacity: 0.35;
+}
+
+/* Header inner: left text | right form */
+.vy-search-header__inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* Left */
+.vy-search-header__left {
+  flex: 1;
+}
+
+/* Label above title */
+.vy-search-header__left .vy-label {
+  margin-bottom: 10px;
+}
+
+/* Title */
+.vy-search-header__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-snug);
+  color: var(--color-primary);
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+/* Highlighted search keyword */
+.vy-search-header__query {
+  color: var(--color-accent);
+  font-style: italic;
+}
+
+/* Results meta */
+.vy-search-header__meta {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-light);
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+.vy-search-header__meta strong {
+  font-weight: var(--fw-semibold);
+  color: var(--color-primary);
+}
+
+/* ============================================================
+   03. INLINE SEARCH FORM
+   ============================================================ */
+
+.vy-search-header__form-wrap {
+  flex-shrink: 0;
+  width: 360px;
+  margin-top: 32px; /* align với title row */
+}
+
+.vy-search-inline-form {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid var(--color-primary);
+  transition: border-color var(--transition-fast);
+}
+
+.vy-search-inline-form:focus-within {
+  border-bottom-color: var(--color-accent);
+}
+
+.vy-search-inline-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg, 20px);
+  font-style: italic;
+  font-weight: var(--fw-light);
+  color: var(--color-primary);
+  background: transparent;
+  min-width: 0;
+  /* Override browser search input styles */
+  -webkit-appearance: none;
+}
+
+.vy-search-inline-input::placeholder {
+  color: var(--color-mid-gray);
+  font-style: italic;
+}
+
+/* Clear X button (Chrome/Safari) */
+.vy-search-inline-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.vy-search-inline-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--color-secondary);
+  padding: 0;
+  transition:
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.vy-search-inline-btn:hover {
+  color: var(--color-accent);
+  transform: scale(1.1);
+}
+
+/* ============================================================
+   04. RESULTS BODY
+   ============================================================ */
+
+.vy-search-body {
+  padding: 56px 0 96px;
+}
+
+/* Grid tái dụng từ archive.css — chỉ cần thêm spacing */
+.vy-search-grid {
+  margin-bottom: 56px;
+}
+
+/* ============================================================
+   05. EMPTY / NO RESULTS STATE
+   ============================================================ */
+
+.vy-search-empty {
+  text-align: center;
+  padding: 64px 20px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.vy-search-empty__icon {
+  font-size: 52px;
+  color: var(--color-mid-gray);
+  margin-bottom: 24px;
+  line-height: 1;
+  animation: vy-search-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes vy-search-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(0.95);
+  }
+}
+
+.vy-search-empty__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+  font-weight: var(--fw-light);
+  color: var(--color-primary);
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.vy-search-empty__text {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
+  color: var(--color-secondary);
+  margin: 0 0 32px;
+  line-height: var(--lh-relaxed);
+}
+
+/* ============================================================
+   06. SUGGESTIONS + CATEGORY PILLS
+   ============================================================ */
+
+.vy-search-suggestions {
+  text-align: left;
+  background: var(--color-off-white);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  border-left: 3px solid var(--color-accent);
+}
+
+.vy-search-suggestions__label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 10px;
+}
+
+.vy-search-suggestions__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vy-search-suggestions__list li {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
+  color: var(--color-secondary);
+  padding: 5px 0;
+  padding-left: 18px;
+  position: relative;
+}
+
+.vy-search-suggestions__list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  font-size: 11px;
+}
+
+/* Category pills */
+.vy-search-cats {
+  margin-bottom: 36px;
+}
+
+.vy-search-cats__label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  margin-bottom: 14px;
+}
+
+.vy-search-cats__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.vy-search-cat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+  text-decoration: none;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.vy-search-cat-pill:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.vy-search-cat-pill__count {
+  font-weight: var(--fw-light);
+  font-size: 9px;
+  color: var(--color-secondary);
+  transition: color var(--transition-fast);
+}
+
+.vy-search-cat-pill:hover .vy-search-cat-pill__count {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ============================================================
+   07. PAGINATION
+   Tái dụng class từ archive.css: .vy-page-num, .vy-page-btn
+   ============================================================ */
+
+.vy-search-pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.vy-search-pagination__inner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* page-numbers classes được WP gen — map sang vy- classes trong PHP */
+.vy-search-pagination .vy-page-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 6px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-wide);
+  color: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  text-decoration: none;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.vy-search-pagination a.vy-page-num:hover {
+  background: var(--color-light-gray);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.vy-search-pagination .vy-page-num.is-current {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+  pointer-events: none;
+}
+
+/* Prev / Next arrow */
+.vy-search-pagination .vy-page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  text-decoration: none;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.vy-search-pagination .vy-page-btn:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+/* Dots */
+.vy-search-pagination .dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 40px;
+  font-size: 12px;
+  color: var(--color-secondary);
+}
+
+.vy-search-pagination__info {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-light);
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+.vy-search-pagination__info strong {
+  font-weight: var(--fw-semibold);
+  color: var(--color-primary);
+}
+
+/* ============================================================
+   08. RESPONSIVE — TABLET ≤ 1199px
+   ============================================================ */
+
+@media (max-width: 1199px) {
+  .vy-search-header {
+    padding: 40px 0 36px;
+  }
+  .vy-search-header__form-wrap {
+    width: 300px;
+  }
+  .vy-search-body {
+    padding: 44px 0 72px;
+  }
+}
+
+/* ============================================================
+   09. RESPONSIVE — MOBILE ≤ 767px
+   ============================================================ -->
+*/
+
+@media (max-width: 767px) {
+  /* Header: stack vertically */
+  .vy-search-header {
+    padding: 28px 0 28px;
+  }
+
+  .vy-search-header__inner {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Form: full width */
+  .vy-search-header__form-wrap {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .vy-search-inline-input {
+    font-size: var(--fs-md, 17px);
+  }
+
+  /* Results grid: 1 column */
+  .vy-search-grid {
+    grid-template-columns: 1fr !important;
+    margin-bottom: 36px;
+  }
+
+  .vy-search-body {
+    padding: 28px 0 56px;
+  }
+
+  /* Empty state */
+  .vy-search-empty {
+    padding: 44px 0;
+  }
+  .vy-search-empty__icon {
+    font-size: 40px;
+  }
+
+  /* Pagination */
+  .vy-search-pagination .vy-page-num,
+  .vy-search-pagination .vy-page-btn {
+    min-width: 36px;
+    height: 36px;
+    font-size: 11px;
+  }
+}
+
+/* ============================================================
+   10. RESPONSIVE — SMALL MOBILE ≤ 480px
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .vy-search-header__title {
+    font-size: 1.5rem;
+  }
+
+  .vy-search-inline-input {
+    font-size: var(--fs-base, 15px);
+  }
+
+  .vy-search-cats__list {
+    gap: 6px;
+  }
+
+  .vy-search-cat-pill {
+    padding: 6px 12px;
+    font-size: 9px;
+  }
+}
+
+/* ============================================================
+   11. REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .vy-search-empty__icon {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* ── Keyword highlight mark ── */
+.vy-search-highlight {
+  background: rgba(184, 157, 110, 0.2);
+  color: var(--color-primary);
+  font-style: normal;
+  border-radius: 2px;
+  padding: 0 2px;
+}

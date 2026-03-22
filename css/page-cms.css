@@ -1,0 +1,744 @@
+/* ============================================================
+   VOYA — page-cms.css
+   CMS Page: Hero + Slider + Content
+   ============================================================
+
+   Contents:
+   01. Main wrapper
+   02. Hero Banner
+   03. Image Slider
+   04. Page Content
+   05. Responsive — Tablet ≤ 1199px
+   06. Responsive — Mobile ≤ 767px
+   07. Responsive — Small mobile ≤ 480px
+   08. Reduced Motion
+   ============================================================ */
+
+/* ============================================================
+   01. MAIN WRAPPER
+   ============================================================ */
+
+.vy-cms-main {
+  background: var(--color-white);
+}
+
+/* ============================================================
+   02. HERO BANNER
+   Nhất quán với single.php — full viewport, content bottom-left
+   ============================================================ */
+
+.vy-cms-hero {
+  position: relative;
+  width: 100%;
+  height: 75vh;
+  min-height: 480px;
+  max-height: 760px;
+  overflow: hidden;
+  background: var(--color-dark);
+}
+
+/* Background image */
+.vy-cms-hero__img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1.04);
+  transition: transform 8s ease-out;
+}
+
+.vy-cms-hero.is-loaded .vy-cms-hero__img {
+  transform: scale(1);
+}
+
+/* Solid dark fallback (khi không có ảnh) */
+.vy-cms-hero__img--empty {
+  background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+}
+
+/* Overlay */
+.vy-cms-hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0.38) 50%,
+    rgba(0, 0, 0, 0.1) 80%,
+    transparent 100%
+  );
+}
+
+/* Content wrap — bottom aligned */
+.vy-cms-hero__content-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 64px;
+}
+
+.vy-cms-hero__content-wrap > .vy-container {
+  width: 100%;
+}
+
+/* Content panel */
+.vy-cms-hero__content {
+  max-width: 680px;
+}
+
+/* Tagline */
+.vy-cms-hero__tagline {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 14px;
+}
+
+/* Title */
+.vy-cms-hero__title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+  color: var(--color-white);
+  margin: 0 0 24px;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Decorative line under title */
+.vy-cms-hero__line {
+  width: 48px;
+  height: 1px;
+  background: var(--color-accent);
+}
+
+/* Scroll hint */
+.vy-cms-hero__scroll {
+  position: absolute;
+  bottom: 0;
+  left: var(--gutter);
+  z-index: 3;
+  padding-bottom: 18px;
+}
+
+.vy-cms-hero__scroll-line {
+  display: block;
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4));
+  animation: vy-scroll-pulse 2s ease-in-out infinite;
+}
+
+@keyframes vy-scroll-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scaleY(1.08);
+  }
+}
+
+/* ============================================================
+   03. IMAGE SLIDER
+   3-up desktop | 2-up tablet | 1-up mobile
+   ============================================================ */
+
+.vy-cms-slider-section {
+  background: var(--color-off-white);
+  padding: 72px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.vy-cms-slider-wrap {
+  position: relative;
+}
+
+/* ── Slider viewport ── */
+.vy-cms-slider {
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+.vy-cms-slider:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* ── Track ── */
+.vy-cms-slider__track {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* ── Single slide ── */
+.vy-cms-slide {
+  flex: 0 0 calc((100% - 32px) / 3); /* 3-up: 2 gaps × 16px */
+  min-width: 0;
+  overflow: hidden;
+}
+
+.vy-cms-slide__inner {
+  overflow: hidden;
+  aspect-ratio: 4 / 5; /* portrait — đẹp hơn cho gallery */
+  background: var(--color-light-gray);
+  position: relative;
+}
+
+.vy-cms-slide__inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.vy-cms-slide:hover .vy-cms-slide__inner img {
+  transform: scale(1.04);
+}
+
+/* ── Arrow buttons ── */
+.vy-cms-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  font-size: 14px;
+  color: var(--color-primary);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+  /* Nằm ngoài slider */
+}
+
+.vy-cms-arrow--prev {
+  left: -60px;
+}
+
+.vy-cms-arrow--next {
+  right: -60px;
+}
+
+.vy-cms-arrow:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.vy-cms-arrow:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.vy-cms-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ── Dots indicator ── */
+.vy-cms-slider__dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.vy-cms-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-mid-gray);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background var(--transition-fast),
+    width var(--transition-fast),
+    border-radius var(--transition-fast);
+}
+
+.vy-cms-dot.is-active {
+  width: 20px;
+  border-radius: 3px;
+  background: var(--color-accent);
+}
+
+.vy-cms-dot:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   04. PAGE CONTENT
+   ============================================================ */
+
+.vy-cms-content-wrap {
+  padding: 80px 0 96px;
+}
+
+.vy-cms-container {
+  max-width: var(--container-narrow, 800px);
+  margin: 0 auto;
+  padding: 0 var(--gutter, 40px);
+}
+
+.vy-cms-content {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-relaxed);
+  color: var(--color-text);
+}
+
+/* ── Headings — Cormorant editorial style ── */
+.vy-cms-content h1,
+.vy-cms-content h2,
+.vy-cms-content h3,
+.vy-cms-content h4,
+.vy-cms-content h5 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-light);
+  color: var(--color-primary);
+  line-height: var(--lh-snug);
+  letter-spacing: -0.01em;
+  margin: 44px 0 18px;
+}
+
+.vy-cms-content > h2:first-child,
+.vy-cms-content > h3:first-child {
+  margin-top: 0;
+}
+
+.vy-cms-content h1 {
+  font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+}
+.vy-cms-content h2 {
+  font-size: clamp(1.55rem, 2.8vw, 2.2rem);
+}
+.vy-cms-content h3 {
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+}
+.vy-cms-content h4 {
+  font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+}
+.vy-cms-content h5 {
+  font-size: var(--fs-lg, 20px);
+}
+
+/* Heading accent — thin gold line dưới h2 */
+.vy-cms-content h2 {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Paragraphs ── */
+.vy-cms-content p {
+  margin: 0 0 28px;
+}
+
+/* ── Blockquote — editorial style ── */
+.vy-cms-content blockquote {
+  margin: 40px 0;
+  padding: 32px 40px;
+  position: relative;
+  border: none;
+}
+
+.vy-cms-content blockquote::before,
+.vy-cms-content blockquote::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-border);
+}
+.vy-cms-content blockquote::before {
+  top: 0;
+}
+.vy-cms-content blockquote::after {
+  bottom: 0;
+}
+
+.vy-cms-content blockquote p {
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 1.8vw, 1.55rem);
+  font-style: italic;
+  font-weight: var(--fw-light);
+  color: var(--color-primary);
+  text-align: center;
+  line-height: var(--lh-snug);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.vy-cms-content blockquote cite {
+  display: block;
+  margin-top: 14px;
+  text-align: center;
+  font-style: normal;
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* ── Lists ── */
+.vy-cms-content ul,
+.vy-cms-content ol {
+  margin: 0 0 28px 0;
+  padding: 0 0 0 0;
+  list-style: none;
+}
+
+.vy-cms-content ul li,
+.vy-cms-content ol li {
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 10px;
+  line-height: var(--lh-normal);
+}
+
+/* Custom bullet */
+.vy-cms-content ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 6px;
+  height: 1px;
+  background: var(--color-accent);
+}
+
+/* Ordered counter */
+.vy-cms-content ol {
+  counter-reset: vy-ol;
+}
+.vy-cms-content ol li {
+  counter-increment: vy-ol;
+}
+.vy-cms-content ol li::before {
+  content: counter(vy-ol, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-accent);
+  letter-spacing: 0.04em;
+  top: 4px;
+}
+
+/* ── Links ── */
+.vy-cms-content a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast);
+}
+.vy-cms-content a:hover {
+  color: var(--color-primary);
+}
+
+/* ── HR ── */
+.vy-cms-content hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 48px 0;
+}
+
+/* ── Images ── */
+.vy-cms-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 32px 0;
+}
+
+.vy-cms-content figure {
+  margin: 32px 0;
+}
+
+.vy-cms-content figcaption {
+  margin-top: 10px;
+  font-size: var(--fs-sm);
+  font-style: italic;
+  color: var(--color-secondary);
+  text-align: center;
+}
+
+/* ── Tables ── */
+.vy-cms-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-size: var(--fs-sm);
+}
+
+.vy-cms-content th,
+.vy-cms-content td {
+  padding: 11px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.vy-cms-content th {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-primary);
+  background: var(--color-off-white);
+}
+
+.vy-cms-content tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Code ── */
+.vy-cms-content pre,
+.vy-cms-content code {
+  font-family: "Fira Code", "Consolas", monospace;
+  font-size: 0.875em;
+  background: var(--color-light-gray);
+  border: 1px solid var(--color-border);
+}
+.vy-cms-content code {
+  padding: 2px 6px;
+}
+.vy-cms-content pre {
+  padding: 20px;
+  overflow-x: auto;
+  margin: 28px 0;
+}
+
+/* ── WP align classes ── */
+.vy-cms-content .alignleft {
+  float: left;
+  margin: 8px 28px 12px 0;
+}
+.vy-cms-content .alignright {
+  float: right;
+  margin: 8px 0 12px 28px;
+}
+.vy-cms-content .aligncenter {
+  display: block;
+  margin: 28px auto;
+  max-width: 100%;
+}
+
+.vy-cms-content::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* ============================================================
+   05. RESPONSIVE — TABLET ≤ 1199px
+   ============================================================ */
+
+@media (max-width: 1199px) {
+  /* Hero */
+  .vy-cms-hero {
+    height: 60vh;
+    min-height: 400px;
+    max-height: 620px;
+  }
+
+  .vy-cms-hero__content-wrap {
+    padding-bottom: 52px;
+  }
+
+  .vy-cms-hero__title {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+  }
+
+  /* Slider: arrows nằm trong viewport */
+  .vy-cms-arrow--prev {
+    left: 0;
+  }
+  .vy-cms-arrow--next {
+    right: 0;
+  }
+
+  .vy-cms-slider {
+    padding: 0 56px; /* chừa chỗ cho arrows */
+  }
+
+  /* 2-up on tablet */
+  .vy-cms-slide {
+    flex-basis: calc((100% - 16px) / 2);
+  }
+
+  /* Content */
+  .vy-cms-content-wrap {
+    padding: 64px 0 80px;
+  }
+}
+
+/* ============================================================
+   06. RESPONSIVE — MOBILE ≤ 767px
+   ============================================================ */
+
+@media (max-width: 767px) {
+  /* Hero */
+  .vy-cms-hero {
+    height: 100svh;
+    min-height: 440px;
+    max-height: none;
+  }
+
+  .vy-cms-hero__title {
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+  }
+
+  .vy-cms-hero__content-wrap {
+    padding-bottom: 44px;
+  }
+
+  .vy-cms-hero__scroll {
+    display: none;
+  }
+
+  /* Slider section */
+  .vy-cms-slider-section {
+    padding: 48px 0;
+  }
+
+  .vy-cms-slider {
+    padding: 0 48px;
+  }
+
+  .vy-cms-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 12px;
+  }
+
+  .vy-cms-arrow--prev {
+    left: 2px;
+  }
+  .vy-cms-arrow--next {
+    right: 2px;
+  }
+
+  /* 2-up on mobile landscape */
+  .vy-cms-slide {
+    flex-basis: calc((100% - 16px) / 2);
+  }
+
+  /* Content */
+  .vy-cms-content-wrap {
+    padding: 48px 0 64px;
+  }
+
+  .vy-cms-content {
+    font-size: 15px;
+  }
+
+  .vy-cms-content blockquote {
+    padding: 24px 20px;
+  }
+
+  .vy-cms-content h2 {
+    padding-bottom: 10px;
+  }
+
+  .vy-cms-content .alignleft,
+  .vy-cms-content .alignright {
+    float: none;
+    margin: 24px 0;
+  }
+}
+
+/* ============================================================
+   07. RESPONSIVE — SMALL MOBILE ≤ 480px
+   ============================================================ */
+
+@media (max-width: 480px) {
+  /* Hero */
+  .vy-cms-hero {
+    min-height: 380px;
+  }
+
+  .vy-cms-hero__title {
+    font-size: 1.65rem;
+  }
+
+  /* Slider: 1-up trên màn hình nhỏ */
+  .vy-cms-slider {
+    padding: 0 44px;
+  }
+
+  .vy-cms-slide {
+    flex-basis: 100%;
+  }
+
+  .vy-cms-arrow {
+    width: 34px;
+    height: 34px;
+    font-size: 11px;
+  }
+
+  /* Content */
+  .vy-cms-content-wrap {
+    padding: 36px 0 52px;
+  }
+
+  .vy-cms-content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ============================================================
+   08. REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .vy-cms-hero__img {
+    transition: none;
+    transform: scale(1);
+  }
+  .vy-cms-hero__scroll {
+    display: none;
+  }
+  .vy-cms-hero__scroll-line {
+    animation: none;
+  }
+  .vy-cms-slider__track {
+    transition: none;
+  }
+  .vy-cms-slide__inner img {
+    transition: none;
+  }
+}

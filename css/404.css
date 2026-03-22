@@ -1,0 +1,544 @@
+/* ============================================================
+   VOYA — 404.css
+   Full-screen 404: 100vh, header floats, no scroll
+   ============================================================
+
+   Contents:
+   01. Body lock (no scroll)
+   02. Main + Scene
+   03. Background + Overlay + Particles
+   04. Content wrapper
+   05. 404 Number + Compass animation
+   06. Text (tagline + title)
+   07. Search form
+   08. Action buttons
+   09. Responsive — Tablet ≤ 1199px
+   10. Responsive — Mobile ≤ 767px
+   11. Responsive — Small mobile ≤ 480px
+   12. Reduced motion
+   ============================================================ */
+
+/* ============================================================
+   01. BODY LOCK
+   ============================================================ */
+
+body.error404 {
+  overflow: hidden;
+  height: 100vh;
+  padding-top: 0 !important; /* override theme body padding */
+}
+
+/* ============================================================
+   02. MAIN + SCENE
+   ============================================================ */
+
+.vy-404-main {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.vy-404-scene {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ============================================================
+   03. BACKGROUND + OVERLAY + PARTICLES
+   ============================================================ */
+
+/* Background — CSS image, có thể override bằng customizer sau */
+.vy-404-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("../images/404.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1.04);
+  transition: transform 10s ease-out;
+  z-index: 0;
+}
+
+body.error404 .vy-404-bg {
+  transform: scale(1); /* Ken Burns trigger khi load */
+}
+
+/* Gradient overlay — đậm hơn Wanderland để dễ đọc text */
+.vy-404-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 10, 10, 0.78) 0%,
+    rgba(20, 20, 20, 0.52) 60%,
+    rgba(20, 20, 20, 0.65) 100%
+  );
+}
+
+/* Floating particles */
+.vy-404-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.vy-404-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(184, 157, 110, 0.15);
+  animation: vy-particle-float linear infinite;
+}
+
+.vy-404-particle:nth-child(1) {
+  width: 6px;
+  height: 6px;
+  left: 15%;
+  top: 70%;
+  animation-duration: 14s;
+  animation-delay: 0s;
+}
+.vy-404-particle:nth-child(2) {
+  width: 4px;
+  height: 4px;
+  left: 72%;
+  top: 80%;
+  animation-duration: 18s;
+  animation-delay: -4s;
+}
+.vy-404-particle:nth-child(3) {
+  width: 8px;
+  height: 8px;
+  left: 45%;
+  top: 85%;
+  animation-duration: 12s;
+  animation-delay: -7s;
+}
+.vy-404-particle:nth-child(4) {
+  width: 3px;
+  height: 3px;
+  left: 88%;
+  top: 60%;
+  animation-duration: 20s;
+  animation-delay: -2s;
+}
+.vy-404-particle:nth-child(5) {
+  width: 5px;
+  height: 5px;
+  left: 28%;
+  top: 90%;
+  animation-duration: 16s;
+  animation-delay: -10s;
+}
+
+@keyframes vy-particle-float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   04. CONTENT WRAPPER
+   ============================================================ */
+
+.vy-404-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 var(--gutter, 40px);
+  max-width: 620px;
+  width: 100%;
+
+  /* Offset header height — không dùng topbar-height */
+  margin-top: var(--header-height-desktop, 80px);
+}
+
+/* ============================================================
+   05. 404 NUMBER + COMPASS
+   ============================================================ */
+
+.vy-404-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+
+/* Digits "4" */
+.vy-404-digit {
+  font-family: var(--font-heading);
+  font-size: clamp(5.5rem, 13vw, 10rem);
+  font-weight: var(--fw-light);
+  color: var(--color-white);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Compass container */
+.vy-404-compass {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(76px, 10vw, 116px);
+  height: clamp(76px, 10vw, 116px);
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.vy-404-compass svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2px 16px rgba(0, 0, 0, 0.35));
+}
+
+/* Compass body — slow rocking */
+.vy-404-compass svg {
+  animation: vy-compass-rock 7s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* Needle — wobble separately */
+.vy-404-needle-n {
+  transform-origin: 60px 62px;
+  animation: vy-needle-wobble 9s ease-in-out infinite;
+}
+
+@keyframes vy-compass-rock {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(3.5deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes vy-needle-wobble {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(12deg);
+  }
+  35% {
+    transform: rotate(-5deg);
+  }
+  55% {
+    transform: rotate(7deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+  90% {
+    transform: rotate(2deg);
+  }
+}
+
+/* ============================================================
+   06. TEXT
+   ============================================================ */
+
+.vy-404-tagline {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 10px;
+}
+
+.vy-404-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.8vw, 2rem);
+  font-weight: var(--fw-light);
+  letter-spacing: var(--ls-tight);
+  color: var(--color-white);
+  margin: 0 0 28px;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.35);
+  font-style: italic;
+}
+
+/* ============================================================
+   07. SEARCH FORM
+   ============================================================ */
+
+.vy-404-search {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 24px;
+}
+
+.vy-404-search__inner {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.vy-404-search__inner:focus-within {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--color-accent);
+}
+
+.vy-404-search__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 13px 16px;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: var(--fw-light);
+  color: var(--color-white);
+  min-width: 0;
+  -webkit-appearance: none;
+}
+
+.vy-404-search__input::placeholder {
+  color: rgba(255, 255, 255, 0.38);
+  font-style: italic;
+}
+
+.vy-404-search__input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.vy-404-search__btn {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent);
+  border: none;
+  color: var(--color-white);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.vy-404-search__btn:hover {
+  background: #9e8550;
+}
+
+/* ============================================================
+   08. ACTION BUTTONS
+   ============================================================ */
+
+.vy-404-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vy-404-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 26px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.vy-404-btn i {
+  font-size: 12px;
+}
+
+/* Primary — solid white */
+.vy-404-btn--primary {
+  background: var(--color-white);
+  color: var(--color-primary);
+  border: 1px solid transparent;
+}
+
+.vy-404-btn--primary:hover {
+  background: var(--color-accent);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+/* Ghost — transparent border */
+.vy-404-btn--ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.vy-404-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--color-white);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   09. RESPONSIVE — TABLET ≤ 1199px
+   ============================================================ */
+
+@media (max-width: 1199px) {
+  .vy-404-content {
+    margin-top: var(--header-height-desktop, 80px);
+  }
+}
+
+/* ============================================================
+   10. RESPONSIVE — MOBILE ≤ 767px
+   ============================================================ */
+
+@media (max-width: 767px) {
+  .vy-404-content {
+    padding: 0 20px;
+    margin-top: var(--header-height-mobile, 64px);
+  }
+
+  .vy-404-digit {
+    font-size: 4.5rem;
+  }
+
+  .vy-404-compass {
+    width: 68px;
+    height: 68px;
+  }
+
+  .vy-404-number {
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .vy-404-title {
+    margin-bottom: 20px;
+    font-size: 1.35rem;
+  }
+
+  .vy-404-search {
+    max-width: 100%;
+    margin-bottom: 18px;
+  }
+}
+
+/* ============================================================
+   11. RESPONSIVE — SMALL MOBILE ≤ 480px
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .vy-404-digit {
+    font-size: 3.8rem;
+  }
+
+  .vy-404-compass {
+    width: 56px;
+    height: 56px;
+  }
+
+  .vy-404-number {
+    gap: 4px;
+  }
+
+  .vy-404-btns {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .vy-404-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
+}
+
+/* ============================================================
+   12. REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .vy-404-bg {
+    transition: none;
+    transform: scale(1);
+  }
+  .vy-404-compass svg {
+    animation: none;
+  }
+  .vy-404-needle-n {
+    animation: none;
+  }
+  .vy-404-particle {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* ── Shake — khi submit form rỗng ── */
+@keyframes vy-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(7px);
+  }
+  60% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+.vy-shake {
+  animation: vy-shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
